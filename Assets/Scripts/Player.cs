@@ -5,8 +5,19 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     // Start is called before the first frame update
+    //Private Seialized
     [SerializeField]
     private float _speed = 3.5f;
+    // use a private for later powerup. 
+    [SerializeField] 
+    private float _laserCooldownTimer = 0.5f; 
+    [SerializeField]
+    private GameObject _laserPrefab;
+  
+
+    //Privates
+    private bool _laserCanFire = true;
+
     void Start()
     {
         //take the current position and assign a start position of (0,0,0)
@@ -15,23 +26,23 @@ public class Player : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    {         
         MovePlayer();
+
+        CheckFireLaser();
     }
+
 
     void MovePlayer()
     {
-        //get our horizontal input from input manager
-        float horizontalInput = Input.GetAxis("Horizontal");
-        //get our vertical input from input manager
+        
+        float horizontalInput = Input.GetAxis("Horizontal");        
         float verticalInput = Input.GetAxis("Vertical");
-        //Determine dirction. Normalize the direction to prevent exponential speed increase on diagonal
+        
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0).normalized;       
 
-        //use Translate - movement is modified by speed and delta time Vector3 * speed * deltatime
         transform.Translate(direction * _speed * Time.deltaTime);
 
-        // clamp the Y positionn. 
         float yClamp = Mathf.Clamp(transform.position.y, -4f, 6f);
         transform.position = new Vector3(transform.position.x, yClamp, 0);
 
@@ -40,9 +51,27 @@ public class Player : MonoBehaviour
         if (transform.position.x >= 11.5 || (transform.position.x <= -11.5))
         {           
             transform.position = new Vector3(transform.position.x * -1, transform.position.y,0);
-        }
-     
+            
+        }     
 
+    }
+    void CheckFireLaser()
+    {
+   
+        if (Input.GetKeyDown(KeyCode.Space) && _laserCanFire)
+        {            
+            Vector3 offset = new Vector3(0.0f,0.8f,0.0f);
+            Instantiate(_laserPrefab, (transform.position + offset), Quaternion.identity);
+            _laserCanFire = false;
+            StartCoroutine(LaserCooldownTimer());
+        }
+
+    }
+
+    IEnumerator LaserCooldownTimer()
+    {
+        yield return new WaitForSeconds(_laserCooldownTimer);
+        _laserCanFire = true;
     }
 
     
