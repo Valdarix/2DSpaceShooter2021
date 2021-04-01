@@ -9,10 +9,12 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _speed = 3.5f;
     // use a private for later powerup. 
-    [SerializeField] 
-    private float _laserCooldownTimer = 0.5f; 
+    [SerializeField]
+    private float _laserCooldownTimer = 0.5f;
     [SerializeField]
     private GameObject _laserPrefab;
+    [SerializeField]
+    private int _lives = 3;
   
 
     //Privates
@@ -46,8 +48,6 @@ public class Player : MonoBehaviour
         float yClamp = Mathf.Clamp(transform.position.y, -4f, 6f);
         transform.position = new Vector3(transform.position.x, yClamp, 0);
 
-        // use 11.5, anything less seems to cause a bug if the player tries to shift back in the other
-        // direction too quickly. Multiple both by *1 to handle both in one line of code. 
         if (transform.position.x >= 11.5 || (transform.position.x <= -11.5))
         {           
             transform.position = new Vector3(transform.position.x * -1, transform.position.y,0);
@@ -74,9 +74,17 @@ public class Player : MonoBehaviour
         _laserCanFire = true;
     }
 
-    
-
-   
+    public void DamagePlayer(int DamageAmount)
+    {
+        if (_lives > 0)
+        {
+            _lives = _lives - DamageAmount; 
+            if (_lives <= 0)
+            {
+                Destroy(gameObject);
+            }
+        }       
+     } 
 
 
 }
