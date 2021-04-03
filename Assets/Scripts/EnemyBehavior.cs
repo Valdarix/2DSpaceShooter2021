@@ -13,15 +13,15 @@ public class EnemyBehavior : MonoBehaviour
 
     private void Start()
     {   
-        //seed with delta time
-        Random.InitState(Mathf.RoundToInt(Time.deltaTime));
-        transform.position = new Vector3(Random.Range(-10.0f, 10.0f), 7.5f, 0);
+      
+       
     }
     // Update is called once per frame
     void Update()
     {
         MoveEnemy();          
     }
+
     void MoveEnemy()
     {
         if (transform.position.y >= -5.5f)
@@ -34,9 +34,8 @@ public class EnemyBehavior : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-
 
         if (other.CompareTag("Player"))
         {

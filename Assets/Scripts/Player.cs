@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
     private GameObject _laserPrefab;
     [SerializeField]
     private int _lives = 3;
-  
+    private SpawnManager _spawnManger;
 
     //Privates
     private bool _laserCanFire = true;
@@ -24,6 +24,11 @@ public class Player : MonoBehaviour
     {
         //take the current position and assign a start position of (0,0,0)
         transform.position = new Vector3(0,0,0);
+        _spawnManger = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
+        if (_spawnManger == null)
+        {
+            Debug.LogError("Spawn Manager is NULL.");
+        }
     }
 
     // Update is called once per frame
@@ -60,7 +65,7 @@ public class Player : MonoBehaviour
    
         if (Input.GetKeyDown(KeyCode.Space) && _laserCanFire)
         {            
-            Vector3 offset = new Vector3(0.0f,0.8f,0.0f);
+            Vector3 offset = new Vector3(0.0f,1.05f,0.0f);
             Instantiate(_laserPrefab, (transform.position + offset), Quaternion.identity);
             _laserCanFire = false;
             StartCoroutine(LaserCooldownTimer());
@@ -81,10 +86,11 @@ public class Player : MonoBehaviour
             _lives = _lives - DamageAmount; 
             if (_lives <= 0)
             {
+                _spawnManger.StopSpawning();
                 Destroy(gameObject);
+                
             }
         }       
-     } 
-
+     }
 
 }
