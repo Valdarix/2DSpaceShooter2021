@@ -14,7 +14,15 @@ public class LaserBehavior : MonoBehaviour
         
         if (transform.position.y > 8.0f)
         {
-            Destroy(gameObject);
+            if (transform.parent != null)
+            {
+                Destroy(transform.parent.gameObject);
+            }
+            else
+            {
+                Destroy(this.gameObject);
+            }
+           
         }
 
     }
@@ -23,7 +31,7 @@ public class LaserBehavior : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            Destroy(gameObject);
+            Destroy(this.gameObject);
         }
     }
 }

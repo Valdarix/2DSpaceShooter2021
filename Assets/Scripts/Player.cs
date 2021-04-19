@@ -16,7 +16,10 @@ public class Player : MonoBehaviour
     [SerializeField]
     private int _lives = 3;
     private SpawnManager _spawnManger;
-
+    [SerializeField]
+    private bool isPowerUpEnabled = false;
+    [SerializeField]
+    private GameObject _powerUp;
     //Privates
     private bool _laserCanFire = true;
 
@@ -55,8 +58,7 @@ public class Player : MonoBehaviour
 
         if (transform.position.x >= 11.5 || (transform.position.x <= -11.5))
         {           
-            transform.position = new Vector3(transform.position.x * -1, transform.position.y,0);
-            
+            transform.position = new Vector3(transform.position.x * -1, transform.position.y,0);            
         }     
 
     }
@@ -66,11 +68,17 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && _laserCanFire)
         {            
             Vector3 offset = new Vector3(0.0f,1.05f,0.0f);
-            Instantiate(_laserPrefab, (transform.position + offset), Quaternion.identity);
+            if (isPowerUpEnabled == true)
+            {
+                Instantiate(_powerUp, (transform.position + offset), Quaternion.identity);
+            } else 
+            {
+                Instantiate(_laserPrefab, (transform.position + offset), Quaternion.identity); 
+            }
+            
             _laserCanFire = false;
             StartCoroutine(LaserCooldownTimer());
         }
-
     }
 
     IEnumerator LaserCooldownTimer()
@@ -92,5 +100,17 @@ public class Player : MonoBehaviour
             }
         }       
      }
+
+    public void EnablePowerUp()
+    {
+        isPowerUpEnabled = true;
+        StartCoroutine(PowerUpTimer());
+    }
+
+    IEnumerator PowerUpTimer()
+    {
+        yield return new WaitForSeconds(5.0f);
+        isPowerUpEnabled = false;
+    }
 
 }
