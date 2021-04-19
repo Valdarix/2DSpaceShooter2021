@@ -3,7 +3,11 @@ guid: 562300b2721e98f4f99934faabeb3b64
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - _enemyOject: {instanceID: 0}
+  - _powerUpObject: {instanceID: 0}
+  - _enemyContainer: {instanceID: 0}
+  - _powerUpContainer: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

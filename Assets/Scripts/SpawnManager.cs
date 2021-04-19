@@ -6,17 +6,24 @@ public class SpawnManager : MonoBehaviour
 {
     [SerializeField]
     private GameObject _enemyOject;
-    private bool _enemyCanSpawn = true;
+    [SerializeField]
+    private GameObject[] _powerUpObject = new GameObject[3];
+    private bool _canSpawn = true;   
     [SerializeField]
     private GameObject _enemyContainer;
     [SerializeField]
+    private GameObject _powerUpContainer;
+    [SerializeField]
     private float _spawnTimer = 5.0f;
-    private WaitForSeconds _spawnWaitForSeconds;
+    [SerializeField]
+    private WaitForSeconds _spawnEnemyWaitForSeconds;
     // Start is called before the first frame update
     void Start()
     {
-        _spawnWaitForSeconds = new WaitForSeconds(_spawnTimer);
-        StartCoroutine("SpawnEnemy");
+        _spawnEnemyWaitForSeconds = new WaitForSeconds(_spawnTimer);
+
+        StartCoroutine(SpawnEnemy());
+        StartCoroutine(SpawnPowerup());
     }
 
     // Update is called once per frame
@@ -27,18 +34,29 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnEnemy()
     {
-        while (_enemyCanSpawn)
+        while (_canSpawn)
         {
             Vector3 randomLocation = new Vector3(Random.Range(-8f, 8f), 7, 0);
             GameObject newEnemy = Instantiate(_enemyOject, randomLocation, Quaternion.identity);
             newEnemy.transform.parent = _enemyContainer.transform;
-            yield return _spawnWaitForSeconds;
+            yield return _spawnEnemyWaitForSeconds;
+        }
+    }
+
+    IEnumerator SpawnPowerup()
+    {
+        while (_canSpawn)
+        {
+            yield return new WaitForSeconds(Random.Range(3.0f, 8.0f));
+            int _powerupID = Random.Range(0, _powerUpObject.Length);
+            Vector3 randomLocation = new Vector3(Random.Range(-8f, 8f), 7, 0);
+            GameObject newPowerup = Instantiate(_powerUpObject[_powerupID], randomLocation, Quaternion.identity);
+            newPowerup.transform.parent = _powerUpContainer.transform;
         }
     }
 
     public void StopSpawning()
     {
-        _enemyCanSpawn = false;
-        StopCoroutine("SpawnEnemy");
+        _canSpawn = false;          
     }
 }

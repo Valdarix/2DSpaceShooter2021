@@ -7,7 +7,10 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     //Private Seialized
     [SerializeField]
-    private float _speed = 3.5f;
+    private float _speed = 5.0f;
+    private float _speedBoostMultiplier = 1f;
+    [SerializeField]
+    private GameObject _playerShieldObject;
     // use a private for later powerup. 
     [SerializeField]
     private float _laserCooldownTimer = 0.5f;
@@ -22,6 +25,10 @@ public class Player : MonoBehaviour
     private GameObject _powerUp;
     //Privates
     private bool _laserCanFire = true;
+    private int _powerupID = -1; // 0 = Triple Shot 1 = Speedboost 2 = shields
+    private int _score = 0;
+    [SerializeField]
+    private UIManager _ui; 
 
     void Start()
     {
@@ -32,6 +39,13 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("Spawn Manager is NULL.");
         }
+        _ui = GameObject.Find("UIManager").GetComponent<UIManager>();
+        if (_ui == null)
+        {
+            Debug.LogError("UIManager is NULL");
+        }
+
+        _score = 0;
     }
 
     // Update is called once per frame
@@ -47,11 +61,10 @@ public class Player : MonoBehaviour
     {
         
         float horizontalInput = Input.GetAxis("Horizontal");        
-        float verticalInput = Input.GetAxis("Vertical");
-        
-        Vector3 direction = new Vector3(horizontalInput, verticalInput, 0).normalized;       
-
-        transform.Translate(direction * _speed * Time.deltaTime);
+        float verticalInput = Input.GetAxis("Vertical");        
+        Vector3 direction = new Vector3(horizontalInput, verticalInput, 0).normalized;    
+       
+        transform.Translate(direction * (_speed * _speedBoostMultiplier) * Time.deltaTime);
 
         float yClamp = Mathf.Clamp(transform.position.y, -4f, 6f);
         transform.position = new Vector3(transform.position.x, yClamp, 0);
@@ -68,7 +81,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && _laserCanFire)
         {            
             Vector3 offset = new Vector3(0.0f,1.05f,0.0f);
-            if (isPowerUpEnabled == true)
+            if (isPowerUpEnabled == true && _powerupID == 0)
             {
                 Instantiate(_powerUp, (transform.position + offset), Quaternion.identity);
             } else 
@@ -89,21 +102,49 @@ public class Player : MonoBehaviour
 
     public void DamagePlayer(int DamageAmount)
     {
-        if (_lives > 0)
+        if (_lives > 0) // only damage player if they are alive and if not shielded
         {
-            _lives = _lives - DamageAmount; 
+            if (_playerShieldObject.activeInHierarchy == true)
+            {
+                _playerShieldObject.SetActive(false);
+            }
+            else
+            {
+                _lives = _lives - DamageAmount;
+            }
             if (_lives <= 0)
             {
                 _spawnManger.StopSpawning();
-                Destroy(gameObject);
-                
+                Destroy(gameObject);                
             }
         }       
      }
 
-    public void EnablePowerUp()
+    public void EnablePowerUp(int powerupID)
     {
         isPowerUpEnabled = true;
+        _powerupID = powerupID;
+        switch (_powerupID)
+        {
+            case 0:
+                //Triple shot do nothing
+                break;
+            case 1:
+                //speed boost 
+                _speedBoostMultiplier = 2.0f;
+                break;
+            case 2:
+                //shields
+                if (_playerShieldObject != null)
+                {
+                    _playerShieldObject.SetActive(true);
+                }
+                break;
+            default:
+                //nothing
+                break;
+                
+        }
         StartCoroutine(PowerUpTimer());
     }
 
@@ -111,6 +152,30 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(5.0f);
         isPowerUpEnabled = false;
+        switch (_powerupID)
+        {
+            case 0:
+                //Triple shot do nothing
+                break;
+            case 1:
+                //speed boost 
+                _speedBoostMultiplier = 1.0f;
+                break;
+            case 2:
+                //shields last until hit so do nothing               
+                break;
+            default:
+                //nothing
+                break;
+
+        }
+        _powerupID = -1;
+    }
+
+    public void UpdateScore(int scoreToAdd)
+    {
+        _score = _score + scoreToAdd;
+        _ui.UpdateScoreUI(_score);
     }
 
 }

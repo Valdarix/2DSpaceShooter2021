@@ -6,6 +6,8 @@ public class LaserBehavior : MonoBehaviour
 {
     [SerializeField]
     private float _speed = 8.0f;
+   
+    
      
     // Update is called once per frame
     void Update()
@@ -32,6 +34,7 @@ public class LaserBehavior : MonoBehaviour
         if (other.CompareTag("Enemy"))
         {
             Destroy(this.gameObject);
+
         }
     }
 }
