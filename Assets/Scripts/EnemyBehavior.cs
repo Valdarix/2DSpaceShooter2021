@@ -8,14 +8,13 @@ public class EnemyBehavior : MonoBehaviour
     [SerializeField]
     private float _speed = 4.0f;
     [SerializeField]
-    private int _damageValue = 1;
-    [SerializeField]
+    private int _damageValue = 1;    
     private Player _player;
 
 
     private void Start()
     {
-        _player = GetComponent<Player>();
+        _player = GameObject.Find("Player").GetComponent<Player>();
     }
     // Update is called once per frame
     void Update()
@@ -34,7 +33,7 @@ public class EnemyBehavior : MonoBehaviour
             transform.position = new Vector3(Random.Range(-10.0f, 10.0f), 7.5f, 0);
         }
     }
-
+ 
     private void OnTriggerEnter2D(Collider2D other)
     {
 

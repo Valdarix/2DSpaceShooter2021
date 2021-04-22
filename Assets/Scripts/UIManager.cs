@@ -8,9 +8,22 @@ public class UIManager : MonoBehaviour
     // Start is called before the first frame update
     [SerializeField]
     private Text _scoreText;
+    [SerializeField]
+    private Sprite[] _livesSprites;
+    [SerializeField]
+    private Image _livesImage;
+    [SerializeField]
+    private Text _gameOverText;
+    [SerializeField]
+    private Text _restartGameText;
+    [SerializeField]
+    private GameManager _gameManager;
+
     void Start()
     {
-        _scoreText.text = "Score: " + 0; 
+        _scoreText.text = "Score: " + 0;
+        _gameOverText.gameObject.SetActive(false);
+        _restartGameText.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -22,5 +35,34 @@ public class UIManager : MonoBehaviour
     public void UpdateScoreUI(int currentScore)
     {
         _scoreText.text = "Score: " + currentScore;
+    }
+
+    public void UpdateLives(int currentLives)
+    {
+        _livesImage.sprite = _livesSprites[currentLives];
+
+        if (currentLives == 0)
+        {
+            if (_gameManager != null)
+            { 
+                _gameManager.GameOver(); 
+            }
+            
+            _restartGameText.gameObject.SetActive(true);
+            _gameOverText.gameObject.SetActive(true);
+            StartCoroutine(FlickerGameOverText());                  
+        }
+    }
+
+    IEnumerator FlickerGameOverText()
+    {
+        while (true)
+        {
+            _gameOverText.text = "GAME OVER";
+            yield return new WaitForSeconds(0.5f);
+            _gameOverText.text = "";
+            yield return new WaitForSeconds(0.5f);           
+        }
+        
     }
 }

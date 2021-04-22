@@ -39,7 +39,7 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("Spawn Manager is NULL.");
         }
-        _ui = GameObject.Find("UIManager").GetComponent<UIManager>();
+        _ui = GameObject.Find("Canvas").GetComponent<UIManager>();
         if (_ui == null)
         {
             Debug.LogError("UIManager is NULL");
@@ -110,13 +110,15 @@ public class Player : MonoBehaviour
             }
             else
             {
-                _lives = _lives - DamageAmount;
+                _lives = _lives - DamageAmount;               
             }
+            _ui.UpdateLives(_lives);
             if (_lives <= 0)
             {
                 _spawnManger.StopSpawning();
                 Destroy(gameObject);                
             }
+           
         }       
      }
 
