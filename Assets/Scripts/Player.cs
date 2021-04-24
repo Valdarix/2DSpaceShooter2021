@@ -37,6 +37,8 @@ public class Player : MonoBehaviour
     private GameObject _explosion;
     [SerializeField]
     private int _shieldStrength = 0;
+    [SerializeField]
+    private int _ammoCount = 15;
    
 
     void Start()
@@ -53,6 +55,13 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("Player: UIManager is NULL");
         }
+        else
+        {
+            // Semd default UI Elements
+            _ui.UpdateAmmoCount(_ammoCount);
+        }
+
+
         _audioFXSource = this.GetComponent<AudioSource>();   
         if (_audioFXSource == null)
         {
@@ -69,6 +78,7 @@ public class Player : MonoBehaviour
             Debug.LogError("Player: Animator not set");
         }
         _score = 0;
+        
     }
 
     // Update is called once per frame
@@ -84,8 +94,12 @@ public class Player : MonoBehaviour
             MovePlayer(0f);
         }       
 
-        CheckFireLaser();
-       
+        if (_ammoCount > 0)
+        {
+            CheckFireLaser();
+        }
+
+             
     }
 
 
@@ -122,7 +136,10 @@ public class Player : MonoBehaviour
                 Instantiate(_laserPrefab, (transform.position + offset), Quaternion.identity);
                 
             }
-          
+
+            _ammoCount--;
+            _ui.UpdateAmmoCount(_ammoCount);
+
             _audioFXSource.Play();
             _laserCanFire = false;
             StartCoroutine(LaserCooldownTimer());
@@ -205,7 +222,7 @@ public class Player : MonoBehaviour
                     _shieldStrength = 3;
                     _ui.UpdateShield(_shieldStrength);
                 }
-                break;
+                break;           
             default:
                 //nothing
                 break;

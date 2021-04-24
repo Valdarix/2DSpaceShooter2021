@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class UIManager : MonoBehaviour
 {
@@ -22,6 +23,8 @@ public class UIManager : MonoBehaviour
     private Image _shieldPower;
     [SerializeField]
     private Sprite[] _shieldPowerSprites;
+    [SerializeField]
+    private Text _ammoCountText;  
 
     void Start()
     {
@@ -32,8 +35,8 @@ public class UIManager : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        
+    {        
+            
     }
 
     public void UpdateScoreUI(int currentScore)
@@ -54,7 +57,7 @@ public class UIManager : MonoBehaviour
             
             _restartGameText.gameObject.SetActive(true);
             _gameOverText.gameObject.SetActive(true);
-            StartCoroutine(FlickerGameOverText());                  
+            StartCoroutine(FlickerText(_gameOverText, "Game Over"));                  
         }
     }
 
@@ -63,13 +66,29 @@ public class UIManager : MonoBehaviour
         _shieldPower.sprite = _shieldPowerSprites[currentShield];
     }
 
-    IEnumerator FlickerGameOverText()
+    public void UpdateAmmoCount(int ammoCount)
+    {
+        _ammoCountText.text = "Ammo: " + ammoCount;
+      
+        switch (ammoCount)
+        {
+            case 0:
+                _ammoCountText.color = Color.red;
+                StartCoroutine(FlickerText(_ammoCountText, "Ammo: 0"));
+                break;
+            default:
+                _ammoCountText.color = Color.white;
+                break;
+        }
+    }
+
+    IEnumerator FlickerText(Text UITextObject, String UIText)
     {
         while (true)
         {
-            _gameOverText.text = "GAME OVER";
+            UITextObject.text = UIText;
             yield return new WaitForSeconds(0.5f);
-            _gameOverText.text = "";
+            UITextObject.text = "";
             yield return new WaitForSeconds(0.5f);           
         }
         
