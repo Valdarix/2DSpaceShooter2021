@@ -28,7 +28,13 @@ public class Player : MonoBehaviour
     private int _powerupID = -1; // 0 = Triple Shot 1 = Speedboost 2 = shields
     private int _score = 0;
     [SerializeField]
-    private UIManager _ui; 
+    private UIManager _ui;
+    [SerializeField]
+    private AudioClip _laserSoundFX;
+    private AudioSource _audioFXSource;
+    private Animator _animator;
+    [SerializeField]
+    private GameObject _explosion;
 
     void Start()
     {
@@ -37,14 +43,28 @@ public class Player : MonoBehaviour
         _spawnManger = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
         if (_spawnManger == null)
         {
-            Debug.LogError("Spawn Manager is NULL.");
+            Debug.LogError("Player: Spawn Manager is NULL.");
         }
         _ui = GameObject.Find("Canvas").GetComponent<UIManager>();
         if (_ui == null)
         {
-            Debug.LogError("UIManager is NULL");
+            Debug.LogError("Player: UIManager is NULL");
+        }
+        _audioFXSource = this.GetComponent<AudioSource>();   
+        if (_audioFXSource == null)
+        {
+            Debug.LogError("Player: Audio Source is NULL");
+        } 
+        else
+        {
+            _audioFXSource.clip = _laserSoundFX;
         }
 
+        _animator = gameObject.GetComponent<Animator>();
+        if (_animator == null)
+        {
+            Debug.LogError("Player: Animator not set");
+        }
         _score = 0;
     }
 
@@ -84,11 +104,14 @@ public class Player : MonoBehaviour
             if (isPowerUpEnabled == true && _powerupID == 0)
             {
                 Instantiate(_powerUp, (transform.position + offset), Quaternion.identity);
+               
             } else 
             {
-                Instantiate(_laserPrefab, (transform.position + offset), Quaternion.identity); 
+                Instantiate(_laserPrefab, (transform.position + offset), Quaternion.identity);
+                
             }
-            
+          
+            _audioFXSource.Play();
             _laserCanFire = false;
             StartCoroutine(LaserCooldownTimer());
         }
@@ -110,15 +133,37 @@ public class Player : MonoBehaviour
             }
             else
             {
-                _lives = _lives - DamageAmount;               
+                _lives = _lives - DamageAmount;        
+                switch (_lives)
+                {
+                    case 0:
+                        //Do nothing player will die 
+                        break;
+                    case 1:
+                        gameObject.transform.Find("LeftWingDamage").transform.gameObject.SetActive(true);
+                        break;
+                    case 2:
+                        gameObject.transform.Find("RightWingDamage").transform.gameObject.SetActive(true);
+                        break;
+                    case 3:
+                        // do nothing full health. Later we can toggle these off
+                        break;
+                }
+                    
             }
             _ui.UpdateLives(_lives);
             if (_lives <= 0)
             {
                 _spawnManger.StopSpawning();
-                Destroy(gameObject);                
+                gameObject.transform.Find("LeftWingDamage").transform.gameObject.SetActive(false);
+                gameObject.transform.Find("RightWingDamage").transform.gameObject.SetActive(false);
+                gameObject.transform.Find("Thruster").transform.gameObject.SetActive(false);
+                gameObject.transform.Find("PlayerShield").transform.gameObject.SetActive(false);
+                _speed = 0;
+                GameObject exp = Instantiate(_explosion, transform.position, Quaternion.identity);
+                exp.gameObject.GetComponent<Animator>().SetTrigger("CanExplode");
+                Destroy(gameObject);              
             }
-           
         }       
      }
 

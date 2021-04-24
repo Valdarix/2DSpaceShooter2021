@@ -7,8 +7,10 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject _enemyOject;
     [SerializeField]
+    private GameObject _asteroid;
+    [SerializeField]
     private GameObject[] _powerUpObject = new GameObject[3];
-    private bool _canSpawn = true;   
+    private bool _canSpawn = false;   
     [SerializeField]
     private GameObject _enemyContainer;
     [SerializeField]
@@ -21,9 +23,9 @@ public class SpawnManager : MonoBehaviour
     void Start()
     {
         _spawnEnemyWaitForSeconds = new WaitForSeconds(_spawnTimer);
-
-        StartCoroutine(SpawnEnemy());
-        StartCoroutine(SpawnPowerup());
+        GameObject newAsteroid = Instantiate(_asteroid);
+        newAsteroid.transform.parent = _enemyContainer.transform;
+       
     }
 
     // Update is called once per frame
@@ -34,6 +36,7 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnEnemy()
     {
+        yield return new WaitForSeconds(3.0f);
         while (_canSpawn)
         {
             Vector3 randomLocation = new Vector3(Random.Range(-8f, 8f), 7, 0);
@@ -45,6 +48,7 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnPowerup()
     {
+        yield return new WaitForSeconds(3.0f);
         while (_canSpawn)
         {
             yield return new WaitForSeconds(Random.Range(3.0f, 8.0f));
@@ -53,6 +57,13 @@ public class SpawnManager : MonoBehaviour
             GameObject newPowerup = Instantiate(_powerUpObject[_powerupID], randomLocation, Quaternion.identity);
             newPowerup.transform.parent = _powerUpContainer.transform;
         }
+    }
+
+    public void StartSpawning()
+    {
+        _canSpawn = true;
+        StartCoroutine(SpawnEnemy());
+        StartCoroutine(SpawnPowerup());
     }
 
     public void StopSpawning()

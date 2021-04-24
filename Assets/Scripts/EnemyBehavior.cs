@@ -10,11 +10,22 @@ public class EnemyBehavior : MonoBehaviour
     [SerializeField]
     private int _damageValue = 1;    
     private Player _player;
-
+    private Animator _animator;
+    [SerializeField]
+    private GameObject _explosion;
 
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
+        if (_player == null)
+        {
+            Debug.LogError("Player is NULL");
+        }
+        _animator = gameObject.GetComponent<Animator>();
+        if (_animator == null)
+        {
+            Debug.LogError("Animator is NULL");
+        }
     }
     // Update is called once per frame
     void Update()
@@ -35,26 +46,35 @@ public class EnemyBehavior : MonoBehaviour
     }
  
     private void OnTriggerEnter2D(Collider2D other)
-    {
-
+    {      
+       
         if (other.CompareTag("Player"))
         {
-            Destroy(gameObject);
+            
             //Damage Player
             Player player = other.transform.GetComponent<Player>();
             if (player != null)
             {
                 //Apply Damange to player
                 player.DamagePlayer(_damageValue);
-                           
+                GameObject exp = Instantiate(_explosion, transform.position, Quaternion.identity);       
+                exp.gameObject.GetComponent<Animator>().SetTrigger("CanExplode");
+                _speed = 0;
+                Destroy(this.gameObject);
+
             }
         }
         else if (other.CompareTag("Laser"))
         {
-            Destroy(gameObject);
-            _player.UpdateScore(10);
+            GameObject exp = Instantiate(_explosion, transform.position, Quaternion.identity);           
+            exp.gameObject.GetComponent<Animator>().SetTrigger("CanExplode");
+            _speed = 0;
+            Destroy(this.gameObject);
+            _player.UpdateScore(10);           
            
         }
+
     }
+
 
 }
