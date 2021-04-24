@@ -18,6 +18,10 @@ public class UIManager : MonoBehaviour
     private Text _restartGameText;
     [SerializeField]
     private GameManager _gameManager;
+    [SerializeField]
+    private Image _shieldPower;
+    [SerializeField]
+    private Sprite[] _shieldPowerSprites;
 
     void Start()
     {
@@ -52,6 +56,11 @@ public class UIManager : MonoBehaviour
             _gameOverText.gameObject.SetActive(true);
             StartCoroutine(FlickerGameOverText());                  
         }
+    }
+
+    public void UpdateShield(int currentShield)
+    {
+        _shieldPower.sprite = _shieldPowerSprites[currentShield];
     }
 
     IEnumerator FlickerGameOverText()

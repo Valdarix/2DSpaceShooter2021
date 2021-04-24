@@ -35,6 +35,8 @@ public class Player : MonoBehaviour
     private Animator _animator;
     [SerializeField]
     private GameObject _explosion;
+    [SerializeField]
+    private int _shieldStrength = 0;
    
 
     void Start()
@@ -139,7 +141,12 @@ public class Player : MonoBehaviour
         {
             if (_playerShieldObject.activeInHierarchy == true)
             {
-                _playerShieldObject.SetActive(false);
+                _shieldStrength--;
+                _ui.UpdateShield(_shieldStrength);
+                if (_shieldStrength == 0)
+                {
+                    _playerShieldObject.SetActive(false);
+                }                
             }
             else
             {
@@ -195,6 +202,8 @@ public class Player : MonoBehaviour
                 if (_playerShieldObject != null)
                 {
                     _playerShieldObject.SetActive(true);
+                    _shieldStrength = 3;
+                    _ui.UpdateShield(_shieldStrength);
                 }
                 break;
             default:
@@ -219,7 +228,8 @@ public class Player : MonoBehaviour
                 _speedBoostMultiplier = 1.0f;
                 break;
             case 2:
-                //shields last until hit so do nothing               
+                //shields last until hit so do nothing
+                           
                 break;
             default:
                 //nothing
