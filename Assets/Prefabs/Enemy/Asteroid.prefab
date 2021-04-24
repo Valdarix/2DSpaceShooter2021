@@ -97,7 +97,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.034968615, y: 0}
@@ -117,7 +117,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rotateSpeed: 5
   _health: 5
-  _sm: {fileID: 0}
   _explosion: {fileID: 1492041011987669512, guid: a82031b35f1a41a4f9e78d95fe305113, type: 3}
 --- !u!50 &7288314343117215476
 Rigidbody2D:

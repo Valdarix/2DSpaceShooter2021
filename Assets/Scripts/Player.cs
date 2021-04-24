@@ -35,6 +35,7 @@ public class Player : MonoBehaviour
     private Animator _animator;
     [SerializeField]
     private GameObject _explosion;
+   
 
     void Start()
     {
@@ -71,20 +72,28 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {         
-        MovePlayer();
+        if (Input.GetKey(KeyCode.LeftShift))        {
+              
+            MovePlayer(3.0f);
+        }
+        else
+        {
+            MovePlayer(0f);
+        }       
 
         CheckFireLaser();
+       
     }
 
 
-    void MovePlayer()
+    void MovePlayer(float thrusterBoost)
     {
-        
+           
         float horizontalInput = Input.GetAxis("Horizontal");        
         float verticalInput = Input.GetAxis("Vertical");        
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0).normalized;    
        
-        transform.Translate(direction * (_speed * _speedBoostMultiplier) * Time.deltaTime);
+        transform.Translate(direction * ((_speed + thrusterBoost) * _speedBoostMultiplier) * Time.deltaTime);
 
         float yClamp = Mathf.Clamp(transform.position.y, -4f, 6f);
         transform.position = new Vector3(transform.position.x, yClamp, 0);

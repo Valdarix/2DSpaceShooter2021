@@ -7,8 +7,7 @@ public class Asteroid : MonoBehaviour
     [SerializeField]
     private float _rotateSpeed = 5.0f;
     [SerializeField]
-    private int _health = 5;
-    [SerializeField]
+    private int _health = 5;   
     private SpawnManager _sm;
     private Animator _animator;
     [SerializeField]
@@ -44,6 +43,7 @@ public class Asteroid : MonoBehaviour
         if (other.CompareTag("Laser"))
         {
             _health--;
+         
 
             if (_health == 0)
             {
