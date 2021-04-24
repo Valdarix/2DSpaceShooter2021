@@ -72,7 +72,8 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {         
-        if (Input.GetKey(KeyCode.LeftShift))        {
+        if (Input.GetKey(KeyCode.LeftShift))       
+        {
               
             MovePlayer(3.0f);
         }
