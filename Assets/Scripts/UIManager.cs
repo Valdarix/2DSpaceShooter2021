@@ -100,22 +100,24 @@ public class UIManager : MonoBehaviour
 
     public void UpdateThrusterUI(int currentPower)
     {
-        _thrusterPower.sprite = _thrusterPowerBar[currentPower];    
-        
 
-        switch(currentPower)
+        if (currentPower >= 0)
         {
-            case 0:                
-                _thrusterPowerText.text = "Recharging";
-                _thrusterPowerText.color = Color.red;
-                break;
-            case 15:
-                _thrusterPowerText.color = Color.green;
-                _thrusterPowerText.text = "Full Power";
-                break;
-            default:
-                break;
-               
+            switch (currentPower)
+            {
+                case 0:
+                    _thrusterPowerText.text = "Recharging";
+                    _thrusterPowerText.color = Color.red;
+                    break;
+                case 15:
+                    _thrusterPowerText.color = Color.green;
+                    _thrusterPowerText.text = "Full Power";
+                    break;
+                default:                    
+                    break;
+
+            }
+             _thrusterPower.sprite = _thrusterPowerBar[currentPower];
         }
     }
 }

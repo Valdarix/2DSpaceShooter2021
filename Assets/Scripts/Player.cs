@@ -45,6 +45,7 @@ public class Player : MonoBehaviour
     private float _lastThrusterUpdate = 0.25f;
     private float _thrusterUpdateDelay = 0.25f;
     private bool _thrusterCharging = false;
+    private bool _canTakeDamage = true;
 
    
 
@@ -164,7 +165,7 @@ public class Player : MonoBehaviour
                     _ammoCount--;
                     _ui.UpdateAmmoCount(_ammoCount,_maxAmmo);
                     break;
-                case 5:
+                case 5: // Shield Pulse doesnt take ammo
                     InstantiateWeapon(_powerUpUltra);
                     break;
                 default:
@@ -205,11 +206,13 @@ public class Player : MonoBehaviour
                     _playerShieldObject.SetActive(false);
                 }                
             }
-            else
+            else if (_canTakeDamage == true)
             {
                 CameraShake.cameraInstance.ShakeCamera();
                 _lives = _lives - DamageAmount;
-                UpdateDamageFX(_lives);                                
+                UpdateDamageFX(_lives);
+                _canTakeDamage = false;
+                StartCoroutine(EnableWeakShield());
             }
             
             _ui.UpdateLives(_lives);
@@ -246,9 +249,7 @@ public class Player : MonoBehaviour
                 //shields
                 if (_playerShieldObject != null)
                 {
-                    _playerShieldObject.SetActive(true);
-                    _shieldStrength = 3;
-                    _ui.UpdateShield(_shieldStrength);
+                    UpdateShieldStatus(true, 3);
                 }
                 break;
             case 3:
@@ -261,7 +262,7 @@ public class Player : MonoBehaviour
                     _lives++;
                     _ui.UpdateLives(_lives);
                     UpdateDamageFX(_lives);
-                }
+                }                
                 break;
             case 5:
                 _audioFXSource.clip = _powerUpUltraSFX;
@@ -271,6 +272,16 @@ public class Player : MonoBehaviour
                 break;                
         }
         StartCoroutine(PowerUpTimer());
+    }
+
+    private void UpdateShieldStatus(bool Toggle, int Strength)
+    {
+        if (_playerShieldObject != null)
+        {
+            _playerShieldObject.SetActive(Toggle);
+            _shieldStrength = Strength;
+            _ui.UpdateShield(_shieldStrength);
+        }
     }
 
     IEnumerator PowerUpTimer()
@@ -287,8 +298,7 @@ public class Player : MonoBehaviour
                 _speedBoostMultiplier = 1.0f;
                 break;
             case 2:
-                //shields last until hit so do nothing
-                           
+                //shields last until hit so do nothing                           
                 break;
             case 3:
                 break;
@@ -347,4 +357,12 @@ public class Player : MonoBehaviour
             }
         }       
     }
+
+    IEnumerator EnableWeakShield()
+    { // Using this to provide cool weak shield effect when a player takes damage.
+        UpdateShieldStatus(true, 3);
+        yield return new WaitForSeconds(0.5f);
+        _canTakeDamage = true;
+        UpdateShieldStatus(false, 0);
+    }    
 }

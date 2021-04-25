@@ -13,6 +13,13 @@ public class EnemyBehavior : MonoBehaviour
     private Animator _animator;
     [SerializeField]
     private GameObject _explosion;
+    [SerializeField]
+    private int _enemyID;
+    private float RotateSpeed = 7f;
+    private float Radius = 1.0f;
+    [SerializeField]
+    private Transform _target;
+    private float _angle;
 
     private void Start()
     {
@@ -26,7 +33,16 @@ public class EnemyBehavior : MonoBehaviour
         {
             Debug.LogError("Animator is NULL");
         }
+
+        if (_enemyID == 1)
+        {
+            if (_target == null)
+            {
+                Debug.LogError("Target is NULL");
+            }           
+        }
     }
+     
     // Update is called once per frame
     void Update()
     {
@@ -37,20 +53,29 @@ public class EnemyBehavior : MonoBehaviour
     {
         if (transform.position.y >= -5.5f)
         {
-            transform.Translate(Vector3.down * _speed * Time.deltaTime);
+            switch (_enemyID)
+            {
+                case 1:
+                    _angle += RotateSpeed * Time.deltaTime;
+
+                    var offset = new Vector3(Mathf.Sin(_angle), Mathf.Cos(_angle),0) * Radius; 
+                    transform.position = _target.transform.position + offset;
+                    break;
+                default:
+                    transform.Translate(Vector3.down * _speed * Time.deltaTime);
+                    break;
+            }            
         }
         else
         {
             transform.position = new Vector3(Random.Range(-10.0f, 10.0f), 7.5f, 0);
-        }
-    }
- 
+        }                
+    } 
+   
     private void OnTriggerEnter2D(Collider2D other)
-    {      
-       
+    {    
         if (other.CompareTag("Player"))
-        {
-            
+        {            
             //Damage Player
             Player player = other.transform.GetComponent<Player>();
             if (player != null)
