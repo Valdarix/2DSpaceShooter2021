@@ -10,6 +10,8 @@ public class SpawnManager : MonoBehaviour
     private GameObject _asteroid;
     [SerializeField]
     private GameObject[] _powerUpObject = new GameObject[6];
+    [SerializeField]
+    private GameObject[] _enemyList;
     private bool _canSpawn = false;   
     [SerializeField]
     private GameObject _enemyContainer;
@@ -20,7 +22,7 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private WaitForSeconds _spawnEnemyWaitForSeconds;
     private float _lastUltraSpawn = 0f;
-    private float _timebetweenUltraSpawns = 10f;
+    private float _timebetweenUltraSpawns = 5f;
     // Start is called before the first frame update
     void Start()
     {
@@ -42,7 +44,7 @@ public class SpawnManager : MonoBehaviour
         while (_canSpawn)
         {
             Vector3 randomLocation = new Vector3(Random.Range(-8f, 8f), 7, 0);
-            GameObject newEnemy = Instantiate(_enemyOject, randomLocation, Quaternion.identity);
+            GameObject newEnemy = Instantiate(_enemyList[Random.Range(0,_enemyList.Length)], randomLocation, Quaternion.identity);
             newEnemy.transform.parent = _enemyContainer.transform;
             yield return _spawnEnemyWaitForSeconds;
         }

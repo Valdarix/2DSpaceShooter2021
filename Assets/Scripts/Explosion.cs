@@ -7,7 +7,8 @@ public class Explosion : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Destroy(this.gameObject, 2.3f);
+        StartCoroutine(ExplosionDamage());
+        Destroy(this.gameObject, 2.0f);
     }
 
     // Update is called once per frame
@@ -25,6 +26,12 @@ public class Explosion : MonoBehaviour
             player.DamagePlayer(1);
             
         }
+    }
+
+    IEnumerator ExplosionDamage()
+    {
+        yield return new WaitForSeconds(1f);
+        this.gameObject.GetComponent<CircleCollider2D>().enabled = false;
     }
 
 }

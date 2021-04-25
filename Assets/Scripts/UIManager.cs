@@ -73,7 +73,7 @@ public class UIManager : MonoBehaviour
         _shieldPower.sprite = _shieldPowerSprites[currentShield];
     }
 
-    public void UpdateAmmoCount(int ammoCount)
+    public void UpdateAmmoCount(int ammoCount, int maxAmmo)
     {
         switch (ammoCount)
         {
@@ -84,7 +84,7 @@ public class UIManager : MonoBehaviour
                 _ammoCountText.color = Color.white;               
                 break;
         }
-        _ammoCountText.text = "Ammo: " + ammoCount;
+        _ammoCountText.text = "Ammo: " + ammoCount + "/" + maxAmmo;
     }
 
     IEnumerator FlickerText(Text UITextObject, String UIText)
@@ -100,22 +100,24 @@ public class UIManager : MonoBehaviour
 
     public void UpdateThrusterUI(int currentPower)
     {
-        _thrusterPower.sprite = _thrusterPowerBar[currentPower];    
-        
 
-        switch(currentPower)
+        if (currentPower >= 0)
         {
-            case 0:                
-                _thrusterPowerText.text = "Recharging";
-                _thrusterPowerText.color = Color.red;
-                break;
-            case 15:
-                _thrusterPowerText.color = Color.green;
-                _thrusterPowerText.text = "Full Power";
-                break;
-            default:
-                break;
-               
+            switch (currentPower)
+            {
+                case 0:
+                    _thrusterPowerText.text = "Recharging";
+                    _thrusterPowerText.color = Color.red;
+                    break;
+                case 15:
+                    _thrusterPowerText.color = Color.green;
+                    _thrusterPowerText.text = "Full Power";
+                    break;
+                default:                    
+                    break;
+
+            }
+             _thrusterPower.sprite = _thrusterPowerBar[currentPower];
         }
     }
 }
