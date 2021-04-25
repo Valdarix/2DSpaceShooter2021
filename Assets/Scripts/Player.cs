@@ -20,12 +20,11 @@ public class Player : MonoBehaviour
     private int _lives = 3;
     [SerializeField]
     private int _maxLives = 3;
-    private SpawnManager _spawnManger;
-    [SerializeField]
-    private bool isPowerUpEnabled = false;
+    private SpawnManager _spawnManger;   
     [SerializeField]
     private GameObject _powerUp;
-    //Privates
+    [SerializeField]
+    private GameObject _powerUpUltra;
     private bool _laserCanFire = true;
     private int _powerupID = -1; // 0 = Triple Shot 1 = Speedboost 2 = shields
     private int _score = 0;
@@ -33,6 +32,10 @@ public class Player : MonoBehaviour
     private UIManager _ui;
     [SerializeField]
     private AudioClip _laserSoundFX;
+    [SerializeField]
+    private AudioClip _powerUpSFX;
+    [SerializeField]
+    private AudioClip _powerUpUltraSFX;
     private AudioSource _audioFXSource;
     private Animator _animator;
     [SerializeField]
@@ -128,25 +131,34 @@ public class Player : MonoBehaviour
     {
    
         if (Input.GetKeyDown(KeyCode.Space) && _laserCanFire)
-        {            
-            Vector3 offset = new Vector3(0.0f,1.05f,0.0f);
-            if (isPowerUpEnabled == true && _powerupID == 0)
+        {                        
+            switch (_powerupID)
             {
-                Instantiate(_powerUp, (transform.position + offset), Quaternion.identity);
-               
-            } else 
-            {
-                Instantiate(_laserPrefab, (transform.position + offset), Quaternion.identity);
-                
-            }
-
-            _ammoCount--;
-            _ui.UpdateAmmoCount(_ammoCount);
+                case 0:
+                    InstantiateWeapon(_powerUp);
+                    _ammoCount--;
+                    _ui.UpdateAmmoCount(_ammoCount);
+                    break;
+                case 5:
+                    InstantiateWeapon(_powerUpUltra);
+                    break;
+                default:
+                    InstantiateWeapon(_laserPrefab);
+                    _ammoCount--;
+                    _ui.UpdateAmmoCount(_ammoCount);
+                    break;
+            }           
 
             _audioFXSource.Play();
             _laserCanFire = false;
             StartCoroutine(LaserCooldownTimer());
         }
+    }
+
+    private void InstantiateWeapon(GameObject weaponProjectile)
+    {
+        Vector3 offset = new Vector3(0.0f, 1.05f, 0.0f);
+        Instantiate(weaponProjectile, (transform.position + offset), Quaternion.identity);
     }
 
     IEnumerator LaserCooldownTimer()
@@ -171,8 +183,7 @@ public class Player : MonoBehaviour
             else
             {
                 _lives = _lives - DamageAmount;
-                UpdateDamageFX(_lives);                
-                    
+                UpdateDamageFX(_lives);                                
             }
             _ui.UpdateLives(_lives);
             if (_lives <= 0)
@@ -191,12 +202,13 @@ public class Player : MonoBehaviour
 
     public void EnablePowerUp(int powerupID)
     {
-        isPowerUpEnabled = true;
+        
         _powerupID = powerupID;
         switch (_powerupID)
         {
             case 0:
                 //Triple shot do nothing
+                _audioFXSource.clip = _powerUpSFX;
                 break;
             case 1:
                 //speed boost 
@@ -223,6 +235,9 @@ public class Player : MonoBehaviour
                     UpdateDamageFX(_lives);
                 }
                 break;
+            case 5:
+                _audioFXSource.clip = _powerUpUltraSFX;
+                break;
             default:
                 //nothing
                 break;                
@@ -232,11 +247,11 @@ public class Player : MonoBehaviour
 
     IEnumerator PowerUpTimer()
     {
-        yield return new WaitForSeconds(5.0f);
-        isPowerUpEnabled = false;
+        yield return new WaitForSeconds(5.0f);       
         switch (_powerupID)
         {
             case 0:
+                _audioFXSource.clip = _laserSoundFX;
                 //Triple shot do nothing
                 break;
             case 1:
@@ -247,12 +262,20 @@ public class Player : MonoBehaviour
                 //shields last until hit so do nothing
                            
                 break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                _audioFXSource.clip = _laserSoundFX;
+                break;
             default:
                 //nothing
                 break;
 
         }
         _powerupID = -1;
+       
     }
 
     public void UpdateScore(int scoreToAdd)
