@@ -4,30 +4,33 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    // Start is called before the first frame update
-    //Private Seialized
+    [SerializeField]
+    private int _lives = 3;
+    [SerializeField]
+    private int _maxLives = 3;
     [SerializeField]
     private float _speed = 5.0f;
+    private bool _laserCanFire = true;
+    private int _powerupID = -1; // 0 = Triple Shot 1 = Speedboost 2 = shields
+    private int _score = 0;
     private float _speedBoostMultiplier = 1f;
+    private int _shieldStrength = 0;
+    private int _ammoCount = 15;
+    private int _thrusterPower = 15;
+    private float _thrusterBoost = 3.0f;
     [SerializeField]
     private GameObject _playerShieldObject;
     // use a private for later powerup. 
     [SerializeField]
     private float _laserCooldownTimer = 0.5f;
     [SerializeField]
-    private GameObject _laserPrefab;
-    [SerializeField]
-    private int _lives = 3;
-    [SerializeField]
-    private int _maxLives = 3;
-    private SpawnManager _spawnManger;   
+    private GameObject _laserPrefab;      
     [SerializeField]
     private GameObject _powerUp;
     [SerializeField]
     private GameObject _powerUpUltra;
-    private bool _laserCanFire = true;
-    private int _powerupID = -1; // 0 = Triple Shot 1 = Speedboost 2 = shields
-    private int _score = 0;
+    [SerializeField]
+    private GameObject _explosion;
     [SerializeField]
     private UIManager _ui;
     [SerializeField]
@@ -38,12 +41,10 @@ public class Player : MonoBehaviour
     private AudioClip _powerUpUltraSFX;
     private AudioSource _audioFXSource;
     private Animator _animator;
-    [SerializeField]
-    private GameObject _explosion;
-    [SerializeField]
-    private int _shieldStrength = 0;
-    [SerializeField]
-    private int _ammoCount = 15;
+    private SpawnManager _spawnManger;
+    private float _lastThrusterUpdate = 0.25f;
+    private float _thrusterUpdateDelay = 0.25f;
+    private bool _thrusterCharging = false;
 
    
 
@@ -67,7 +68,6 @@ public class Player : MonoBehaviour
             _ui.UpdateAmmoCount(_ammoCount);
         }
 
-
         _audioFXSource = this.GetComponent<AudioSource>();   
         if (_audioFXSource == null)
         {
@@ -84,39 +84,53 @@ public class Player : MonoBehaviour
             Debug.LogError("Player: Animator not set");
         }
         _score = 0;
-        
+      
     }
 
     // Update is called once per frame
     void Update()
-    {         
-        if (Input.GetKey(KeyCode.LeftShift))       
-        {
-              
-            MovePlayer(3.0f);
-        }
-        else
-        {
-            MovePlayer(0f);
-        }       
-
+    {                
+        MovePlayer();       
+   
         if (_ammoCount > 0)
         {
             CheckFireLaser();
-        }
-
-             
+        }     
     }
 
 
-    void MovePlayer(float thrusterBoost)
-    {
-           
+    void MovePlayer()
+    {           
         float horizontalInput = Input.GetAxis("Horizontal");        
         float verticalInput = Input.GetAxis("Vertical");        
-        Vector3 direction = new Vector3(horizontalInput, verticalInput, 0).normalized;    
-       
-        transform.Translate(direction * ((_speed + thrusterBoost) * _speedBoostMultiplier) * Time.deltaTime);
+        Vector3 direction = new Vector3(horizontalInput, verticalInput, 0).normalized;        
+
+        if (Input.GetKey(KeyCode.LeftShift) && _thrusterCharging == false)
+        { 
+            _thrusterBoost = 3.0f;         
+            if (Time.time - _lastThrusterUpdate > _thrusterUpdateDelay)
+            {               
+                switch (_thrusterPower)
+                {
+                    case 0:
+                        _thrusterCharging = true;
+                        StartCoroutine(ChargeThruster());
+                        break;
+                    default:
+                        _thrusterPower--;
+                        _ui.UpdateThrusterUI(_thrusterPower);
+                        break;
+                }
+              
+                _lastThrusterUpdate = Time.time;
+            }
+        }
+        else
+        { 
+            _thrusterBoost = 1.0f;
+        }    
+
+        transform.Translate(direction * ((_speed + _thrusterBoost) * _speedBoostMultiplier) * Time.deltaTime);
 
         float yClamp = Mathf.Clamp(transform.position.y, -4f, 6f);
         transform.position = new Vector3(transform.position.x, yClamp, 0);
@@ -306,4 +320,17 @@ public class Player : MonoBehaviour
         }
     }
 
+    IEnumerator ChargeThruster()
+    {
+        while (_thrusterCharging == true)
+        {
+            yield return new WaitForSeconds(1.0f);
+            _thrusterPower++;
+            _ui.UpdateThrusterUI(_thrusterPower);
+            if (_thrusterPower == 15)
+            {
+                _thrusterCharging = false;
+            }
+        }       
+    }
 }

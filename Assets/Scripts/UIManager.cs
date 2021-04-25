@@ -25,6 +25,13 @@ public class UIManager : MonoBehaviour
     private Sprite[] _shieldPowerSprites;
     [SerializeField]
     private Text _ammoCountText;
+    [SerializeField]
+    private Image _thrusterPower;
+    [SerializeField]
+    private Sprite[] _thrusterPowerBar;
+    [SerializeField]
+    private Text _thrusterPowerText;
+
    
 
     void Start()
@@ -88,7 +95,27 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             UITextObject.text = "";
             yield return new WaitForSeconds(0.5f);           
-        }
+        }        
+    }
+
+    public void UpdateThrusterUI(int currentPower)
+    {
+        _thrusterPower.sprite = _thrusterPowerBar[currentPower];    
         
+
+        switch(currentPower)
+        {
+            case 0:                
+                _thrusterPowerText.text = "Recharging";
+                _thrusterPowerText.color = Color.red;
+                break;
+            case 15:
+                _thrusterPowerText.color = Color.green;
+                _thrusterPowerText.text = "Full Power";
+                break;
+            default:
+                break;
+               
+        }
     }
 }
