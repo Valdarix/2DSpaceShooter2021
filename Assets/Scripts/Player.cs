@@ -196,9 +196,11 @@ public class Player : MonoBehaviour
             }
             else
             {
+                CameraShake.cameraInstance.ShakeCamera();
                 _lives = _lives - DamageAmount;
                 UpdateDamageFX(_lives);                                
             }
+            
             _ui.UpdateLives(_lives);
             if (_lives <= 0)
             {

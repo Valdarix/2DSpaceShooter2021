@@ -31,8 +31,8 @@ public class UIManager : MonoBehaviour
     private Sprite[] _thrusterPowerBar;
     [SerializeField]
     private Text _thrusterPowerText;
-
-   
+    [SerializeField]
+  
 
     void Start()
     {
