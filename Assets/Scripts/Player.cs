@@ -18,6 +18,8 @@ public class Player : MonoBehaviour
     private GameObject _laserPrefab;
     [SerializeField]
     private int _lives = 3;
+    [SerializeField]
+    private int _maxLives = 3;
     private SpawnManager _spawnManger;
     [SerializeField]
     private bool isPowerUpEnabled = false;
@@ -39,6 +41,7 @@ public class Player : MonoBehaviour
     private int _shieldStrength = 0;
     [SerializeField]
     private int _ammoCount = 15;
+
    
 
     void Start()
@@ -167,30 +170,15 @@ public class Player : MonoBehaviour
             }
             else
             {
-                _lives = _lives - DamageAmount;        
-                switch (_lives)
-                {
-                    case 0:
-                        //Do nothing player will die 
-                        break;
-                    case 1:
-                        gameObject.transform.Find("LeftWingDamage").transform.gameObject.SetActive(true);
-                        break;
-                    case 2:
-                        gameObject.transform.Find("RightWingDamage").transform.gameObject.SetActive(true);
-                        break;
-                    case 3:
-                        // do nothing full health. Later we can toggle these off
-                        break;
-                }
+                _lives = _lives - DamageAmount;
+                UpdateDamageFX(_lives);                
                     
             }
             _ui.UpdateLives(_lives);
             if (_lives <= 0)
             {
                 _spawnManger.StopSpawning();
-                gameObject.transform.Find("LeftWingDamage").transform.gameObject.SetActive(false);
-                gameObject.transform.Find("RightWingDamage").transform.gameObject.SetActive(false);
+                UpdateDamageFX(_lives);
                 gameObject.transform.Find("Thruster").transform.gameObject.SetActive(false);
                 gameObject.transform.Find("PlayerShield").transform.gameObject.SetActive(false);
                 _speed = 0;
@@ -227,10 +215,17 @@ public class Player : MonoBehaviour
                 _ammoCount = 15;
                 _ui.UpdateAmmoCount(_ammoCount);
                 break;
+            case 4:
+                if (_lives < _maxLives)
+                { 
+                    _lives++;
+                    _ui.UpdateLives(_lives);
+                    UpdateDamageFX(_lives);
+                }
+                break;
             default:
                 //nothing
-                break;
-                
+                break;                
         }
         StartCoroutine(PowerUpTimer());
     }
@@ -264,6 +259,28 @@ public class Player : MonoBehaviour
     {
         _score = _score + scoreToAdd;
         _ui.UpdateScoreUI(_score);
+    }
+
+    private void UpdateDamageFX(int _lives)
+    {        
+        switch (_lives)
+        {           
+            case 0:
+                //Do nothing player will die 
+                break;
+            case 1:
+                gameObject.transform.Find("LeftWingDamage").transform.gameObject.SetActive(true);
+                break;
+            case 2:
+                gameObject.transform.Find("RightWingDamage").transform.gameObject.SetActive(true);
+                gameObject.transform.Find("LeftWingDamage").transform.gameObject.SetActive(false);
+                break;
+            case 3:
+                // do nothing full health. Later we can toggle these off
+                gameObject.transform.Find("LeftWingDamage").transform.gameObject.SetActive(false);
+                gameObject.transform.Find("RightWingDamage").transform.gameObject.SetActive(false);
+               break;
+        }
     }
 
 }

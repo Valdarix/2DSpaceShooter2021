@@ -415,6 +415,7 @@ MonoBehaviour:
   _laserCooldownTimer: 0.15
   _laserPrefab: {fileID: 5071006844193831084, guid: d9530395b36ae07499bf312dc81481b6, type: 3}
   _lives: 3
+  _maxLives: 3
   isPowerUpEnabled: 0
   _powerUp: {fileID: 5273686796047665897, guid: 004ea4a5cd6a1e64ebc9d98d8fae870a, type: 3}
   _ui: {fileID: 1215596337}
@@ -1650,6 +1651,7 @@ MonoBehaviour:
   - {fileID: 8274289098923296332, guid: 83173f595ec523642a2e791803bd3de4, type: 3}
   - {fileID: 2848474220478311192, guid: 3e6e9d401237c8e4a87e2389c09aec24, type: 3}
   - {fileID: 1651078164559361737, guid: 15f3e5740497aaa45a30f57466cb65cb, type: 3}
+  - {fileID: 2018031767134089113, guid: 3580ff2998026aa44a23add73bffafa1, type: 3}
   _enemyContainer: {fileID: 2087119582}
   _powerUpContainer: {fileID: 351629423}
   _spawnTimer: 5
