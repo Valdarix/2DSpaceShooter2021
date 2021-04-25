@@ -73,7 +73,7 @@ public class UIManager : MonoBehaviour
         _shieldPower.sprite = _shieldPowerSprites[currentShield];
     }
 
-    public void UpdateAmmoCount(int ammoCount)
+    public void UpdateAmmoCount(int ammoCount, int maxAmmo)
     {
         switch (ammoCount)
         {
@@ -84,7 +84,7 @@ public class UIManager : MonoBehaviour
                 _ammoCountText.color = Color.white;               
                 break;
         }
-        _ammoCountText.text = "Ammo: " + ammoCount;
+        _ammoCountText.text = "Ammo: " + ammoCount + "/" + maxAmmo;
     }
 
     IEnumerator FlickerText(Text UITextObject, String UIText)

@@ -16,11 +16,11 @@ public class Player : MonoBehaviour
     private float _speedBoostMultiplier = 1f;
     private int _shieldStrength = 0;
     private int _ammoCount = 15;
+    private int _maxAmmo = 15;
     private int _thrusterPower = 15;
     private float _thrusterBoost = 3.0f;
     [SerializeField]
     private GameObject _playerShieldObject;
-    // use a private for later powerup. 
     [SerializeField]
     private float _laserCooldownTimer = 0.5f;
     [SerializeField]
@@ -65,7 +65,7 @@ public class Player : MonoBehaviour
         else
         {
             // Semd default UI Elements
-            _ui.UpdateAmmoCount(_ammoCount);
+            _ui.UpdateAmmoCount(_ammoCount, _maxAmmo);
         }
 
         _audioFXSource = this.GetComponent<AudioSource>();   
@@ -105,6 +105,17 @@ public class Player : MonoBehaviour
         float verticalInput = Input.GetAxis("Vertical");        
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0).normalized;        
 
+        if (horizontalInput == 0f)
+        {
+            _animator.SetBool("isMoving",false);
+            _animator.SetFloat("xInput", horizontalInput);      
+        }
+        else        
+        {
+            _animator.SetBool("isMoving", true);
+            _animator.SetFloat("xInput", horizontalInput);
+          
+        }
         if (Input.GetKey(KeyCode.LeftShift) && _thrusterCharging == false)
         { 
             _thrusterBoost = 3.0f;         
@@ -151,7 +162,7 @@ public class Player : MonoBehaviour
                 case 0:
                     InstantiateWeapon(_powerUp);
                     _ammoCount--;
-                    _ui.UpdateAmmoCount(_ammoCount);
+                    _ui.UpdateAmmoCount(_ammoCount,_maxAmmo);
                     break;
                 case 5:
                     InstantiateWeapon(_powerUpUltra);
@@ -159,7 +170,7 @@ public class Player : MonoBehaviour
                 default:
                     InstantiateWeapon(_laserPrefab);
                     _ammoCount--;
-                    _ui.UpdateAmmoCount(_ammoCount);
+                    _ui.UpdateAmmoCount(_ammoCount,_maxAmmo);
                     break;
             }           
 
@@ -227,8 +238,9 @@ public class Player : MonoBehaviour
                 _audioFXSource.clip = _powerUpSFX;
                 break;
             case 1:
-                //speed boost 
+                //speed boost will give an instant burst for 5 seconds and instantly recharge your thrusters
                 _speedBoostMultiplier = 2.0f;
+                _thrusterPower = 15;               
                 break;
             case 2:
                 //shields
@@ -241,7 +253,7 @@ public class Player : MonoBehaviour
                 break;
             case 3:
                 _ammoCount = 15;
-                _ui.UpdateAmmoCount(_ammoCount);
+                _ui.UpdateAmmoCount(_ammoCount,_maxAmmo);
                 break;
             case 4:
                 if (_lives < _maxLives)
