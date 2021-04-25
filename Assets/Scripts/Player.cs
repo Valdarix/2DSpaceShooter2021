@@ -222,7 +222,11 @@ public class Player : MonoBehaviour
                     _shieldStrength = 3;
                     _ui.UpdateShield(_shieldStrength);
                 }
-                break;           
+                break;
+            case 3:
+                _ammoCount = 15;
+                _ui.UpdateAmmoCount(_ammoCount);
+                break;
             default:
                 //nothing
                 break;

@@ -24,13 +24,14 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private Sprite[] _shieldPowerSprites;
     [SerializeField]
-    private Text _ammoCountText;  
+    private Text _ammoCountText;
+   
 
     void Start()
     {
         _scoreText.text = "Score: " + 0;
         _gameOverText.gameObject.SetActive(false);
-        _restartGameText.gameObject.SetActive(false);
+        _restartGameText.gameObject.SetActive(false);        
     }
 
     // Update is called once per frame
@@ -53,8 +54,7 @@ public class UIManager : MonoBehaviour
             if (_gameManager != null)
             { 
                 _gameManager.GameOver(); 
-            }
-            
+            }            
             _restartGameText.gameObject.SetActive(true);
             _gameOverText.gameObject.SetActive(true);
             StartCoroutine(FlickerText(_gameOverText, "Game Over"));                  
@@ -68,18 +68,16 @@ public class UIManager : MonoBehaviour
 
     public void UpdateAmmoCount(int ammoCount)
     {
-        _ammoCountText.text = "Ammo: " + ammoCount;
-      
         switch (ammoCount)
         {
-            case 0:
-                _ammoCountText.color = Color.red;
-                StartCoroutine(FlickerText(_ammoCountText, "Ammo: 0"));
+            case 0:             
+                _ammoCountText.color = Color.red;               
                 break;
             default:
-                _ammoCountText.color = Color.white;
+                _ammoCountText.color = Color.white;               
                 break;
         }
+        _ammoCountText.text = "Ammo: " + ammoCount;
     }
 
     IEnumerator FlickerText(Text UITextObject, String UIText)
