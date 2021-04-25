@@ -19,6 +19,8 @@ public class SpawnManager : MonoBehaviour
     private float _spawnTimer = 5.0f;
     [SerializeField]
     private WaitForSeconds _spawnEnemyWaitForSeconds;
+    private float _lastUltraSpawn = 0f;
+    private float _timebetweenUltraSpawns = 10f;
     // Start is called before the first frame update
     void Start()
     {
@@ -52,7 +54,18 @@ public class SpawnManager : MonoBehaviour
         while (_canSpawn)
         {
             yield return new WaitForSeconds(Random.Range(3.0f, 8.0f));
-            int _powerupID = Random.Range(0, _powerUpObject.Length);
+            int _powerupID;
+            // This is a poor implementation for limiting the rarity of the Ultra spawn, it requires the object to be at the end of the array to work. 
+            if (Time.time - _lastUltraSpawn > _timebetweenUltraSpawns)
+            {
+                 _powerupID = Random.Range(0, _powerUpObject.Length);
+                _lastUltraSpawn = Time.time;              
+            }
+            else
+            {
+                 _powerupID = Random.Range(0, _powerUpObject.Length - 1);
+            }
+            
             Vector3 randomLocation = new Vector3(Random.Range(-8f, 8f), 7, 0);
             GameObject newPowerup = Instantiate(_powerUpObject[_powerupID], randomLocation, Quaternion.identity);
             newPowerup.transform.parent = _powerUpContainer.transform;
