@@ -84,8 +84,7 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("Player: Animator not set");
         }
-        _score = 0;
-      
+        _score = 0;      
     }
 
     // Update is called once per frame
@@ -114,8 +113,7 @@ public class Player : MonoBehaviour
         else        
         {
             _animator.SetBool("isMoving", true);
-            _animator.SetFloat("xInput", horizontalInput);
-          
+            _animator.SetFloat("xInput", horizontalInput);          
         }
         if (Input.GetKey(KeyCode.LeftShift) && _thrusterCharging == false)
         { 
@@ -154,8 +152,7 @@ public class Player : MonoBehaviour
 
     }
     void CheckFireLaser()
-    {
-   
+    {   
         if (Input.GetKeyDown(KeyCode.Space) && _laserCanFire)
         {                        
             switch (_powerupID)
@@ -211,8 +208,9 @@ public class Player : MonoBehaviour
                 CameraShake.cameraInstance.ShakeCamera();
                 _lives = _lives - DamageAmount;
                 UpdateDamageFX(_lives);
-                _canTakeDamage = false;
-                StartCoroutine(EnableWeakShield());
+                // The code below is for a special shield type, work in progress.
+               //_canTakeDamage = false;
+               // StartCoroutine(EnableWeakShield());
             }
             
             _ui.UpdateLives(_lives);
@@ -231,8 +229,7 @@ public class Player : MonoBehaviour
      }
 
     public void EnablePowerUp(int powerupID)
-    {
-        
+    {        
         _powerupID = powerupID;
         switch (_powerupID)
         {
@@ -348,13 +345,13 @@ public class Player : MonoBehaviour
     {
         while (_thrusterCharging == true)
         {
-            yield return new WaitForSeconds(1.0f);
-            _thrusterPower++;
-            _ui.UpdateThrusterUI(_thrusterPower);
+            yield return new WaitForSeconds(0.5f);
+            _thrusterPower++;            
             if (_thrusterPower == 15)
             {
                 _thrusterCharging = false;
             }
+            _ui.UpdateThrusterUI(_thrusterPower);
         }       
     }
 

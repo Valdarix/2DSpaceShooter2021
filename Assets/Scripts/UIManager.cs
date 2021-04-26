@@ -32,6 +32,7 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private Text _thrusterPowerText;
     [SerializeField]
+    private Text _waveText;
   
 
     void Start()
@@ -97,11 +98,15 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(0.5f);           
         }        
     }
+    public void UpdateWaveUI(int currentWave)
+    {
+        _waveText.text = "Wave: " + currentWave;
+    }
 
     public void UpdateThrusterUI(int currentPower)
     {
 
-        if (currentPower >= 0)
+        if (currentPower >= 0 && currentPower <= 15)
         {
             switch (currentPower)
             {
@@ -117,7 +122,7 @@ public class UIManager : MonoBehaviour
                     break;
 
             }
-             _thrusterPower.sprite = _thrusterPowerBar[currentPower];
+            _thrusterPower.sprite = _thrusterPowerBar[currentPower];
         }
     }
 }
