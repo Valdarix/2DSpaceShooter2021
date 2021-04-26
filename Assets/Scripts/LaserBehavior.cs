@@ -10,6 +10,10 @@ public class LaserBehavior : MonoBehaviour
     private float _rotateSpeed = 0.0f;
     [SerializeField]
     private bool _destroyOnTrigger = true;
+    [SerializeField]
+    private bool _fireRight = false;
+    [SerializeField]
+    private bool _fireLeft = false;
 
 
     private void Start()
@@ -38,29 +42,74 @@ public class LaserBehavior : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Enemy"))
-        {   
-            if (_destroyOnTrigger == true)
-            { 
-                Destroy(this.gameObject); 
-            }           
-        }      
+    {   
+        if (this.CompareTag("Laser"))
+        {
+            if (other.CompareTag("Enemy"))
+            {
+                if (_destroyOnTrigger == true)
+                {
+                    Destroy(this.gameObject);
+                }
+            }
+        }
+
+        if (this.CompareTag("EnemyLaser"))
+        {
+            if (other.CompareTag("Player"))
+            {
+                if (_destroyOnTrigger == true)
+                {
+                    Player player = other.transform.GetComponent<Player>();
+                    if (player != null)
+                    {
+                        //Apply Damange to player
+                        player.DamagePlayer(1);
+                        Destroy(this.gameObject);
+                    }
+                }
+            }
+        }
+
     }
 
     private void HandleMovement()
     {
-        transform.Translate(Vector3.up * _speed * Time.deltaTime);
+        
+        if (this.CompareTag("Laser"))
+        { 
+            transform.Translate(Vector3.up * _speed * Time.deltaTime);
 
-        if (transform.position.y > 8.0f)
-        {
-            if (transform.parent != null)
+            if (transform.position.y > 8.0f)
             {
-                Destroy(transform.parent.gameObject);
+                if (transform.parent != null)
+                {
+                    Destroy(transform.parent.gameObject);
+                }
+                else
+                {
+                    Destroy(this.gameObject);
+                }
             }
-            else
+        }
+
+        if (this.CompareTag("EnemyLaser"))
+        {
+                      
+            transform.Translate(Vector3.down * _speed * Time.deltaTime);
+         
+            
+            
+            if (transform.position.y < -8.0f)
             {
-                Destroy(this.gameObject);
+                if (transform.parent != null)
+                {
+                    Destroy(transform.parent.gameObject);
+                }
+                else
+                {
+                    Destroy(this.gameObject);
+                }
             }
         }
     }

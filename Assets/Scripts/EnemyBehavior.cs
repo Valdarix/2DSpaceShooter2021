@@ -20,6 +20,12 @@ public class EnemyBehavior : MonoBehaviour
     [SerializeField]
     private Transform _target;
     private float _angle;
+    [SerializeField]
+    private GameObject _laser;
+    [SerializeField]
+    private AudioClip _laserFX;
+    private AudioSource _audioFXSource;
+    private bool _canFire = true;
 
     private void Start()
     {
@@ -41,12 +47,57 @@ public class EnemyBehavior : MonoBehaviour
                 Debug.LogError("Target is NULL");
             }           
         }
+        _audioFXSource = this.GetComponent<AudioSource>();
+        if (_audioFXSource == null)
+        {
+            Debug.LogError("Player: Audio Source is NULL on EnenmyID: " + _enemyID);
+             
+        }
+        else
+        {
+            _audioFXSource.clip = _laserFX;
+        }
     }
      
     // Update is called once per frame
     void Update()
     {
         MoveEnemy();          
+    }
+
+    private void FixedUpdate()
+    {
+        if (_canFire == true && _enemyID == 2 )
+        {
+            float rayLength = 50f;
+
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, rayLength);
+            if (hit.collider != null)
+            {
+              
+                if (hit.collider.CompareTag("Player"))
+                {
+                    //Fire at player!
+
+                    Vector3 offset = new Vector3(0, 0, 0);
+                    Instantiate(_laser, (transform.position + offset), Quaternion.identity);                   
+                    _canFire = false;
+                    StartCoroutine(LaserCooldownTimer());
+
+                }
+            }           
+        }
+       
+    }
+
+    IEnumerator LaserCooldownTimer()
+    {
+        var fireRate = 0.5f;
+        if (_enemyID == 3)
+            fireRate = 1f;    
+        yield return new WaitForSeconds(fireRate);
+        
+        _canFire = true;
     }
 
     void MoveEnemy()
