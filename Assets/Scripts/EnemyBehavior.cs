@@ -23,6 +23,10 @@ public class EnemyBehavior : MonoBehaviour
     [SerializeField]
     private GameObject _laser;
     [SerializeField]
+    private GameObject _laserRightSide;
+    [SerializeField]
+    private GameObject _laserLeftSide;
+    [SerializeField]
     private AudioClip _laserFX;
     private AudioSource _audioFXSource;
     private bool _canFire = true;
@@ -67,7 +71,7 @@ public class EnemyBehavior : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_canFire == true && _enemyID == 2 )
+        if (_canFire == true && (_enemyID == 2 || _enemyID == 3))
         {
             float rayLength = 50f;
 
@@ -78,16 +82,14 @@ public class EnemyBehavior : MonoBehaviour
                 if (hit.collider.CompareTag("Player"))
                 {
                     //Fire at player!
-
                     Vector3 offset = new Vector3(0, 0, 0);
                     Instantiate(_laser, (transform.position + offset), Quaternion.identity);                   
                     _canFire = false;
                     StartCoroutine(LaserCooldownTimer());
 
                 }
-            }           
-        }
-       
+            }             
+        }       
     }
 
     IEnumerator LaserCooldownTimer()
@@ -108,7 +110,6 @@ public class EnemyBehavior : MonoBehaviour
             {
                 case 1:
                     _angle += RotateSpeed * Time.deltaTime;
-
                     var offset = new Vector3(Mathf.Sin(_angle), Mathf.Cos(_angle),0) * Radius; 
                     transform.position = _target.transform.position + offset;
                     break;
