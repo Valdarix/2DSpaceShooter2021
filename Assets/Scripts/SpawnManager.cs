@@ -9,7 +9,7 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject _asteroid;
     [SerializeField]
-    private GameObject[] _powerUpObject = new GameObject[6];
+    private GameObject[] _powerUpObject;
     [SerializeField]
     private GameObject[] _enemyList;
     private bool _canSpawn = false;   

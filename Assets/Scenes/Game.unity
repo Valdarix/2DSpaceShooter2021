@@ -1653,6 +1653,7 @@ MonoBehaviour:
   - {fileID: 2848474220478311192, guid: 3e6e9d401237c8e4a87e2389c09aec24, type: 3}
   - {fileID: 1651078164559361737, guid: 15f3e5740497aaa45a30f57466cb65cb, type: 3}
   - {fileID: 2018031767134089113, guid: 3580ff2998026aa44a23add73bffafa1, type: 3}
+  - {fileID: 396618999423597525, guid: adb4390c1fda7ea4c9f65c4c57b727b4, type: 3}
   - {fileID: 6072033046560038219, guid: 4b180e969fab502458d1afd8f5779aa4, type: 3}
   _enemyList:
   - {fileID: 1743728651922700665, guid: ba72eb008a0978e4ea54b4c857a71be0, type: 3}

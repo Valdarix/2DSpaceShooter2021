@@ -264,6 +264,9 @@ public class Player : MonoBehaviour
             case 5:
                 _audioFXSource.clip = _powerUpUltraSFX;
                 break;
+            case 6:
+                _speed = 0;
+                break;
             default:
                 //nothing
                 break;                
@@ -303,6 +306,9 @@ public class Player : MonoBehaviour
                 break;
             case 5:
                 _audioFXSource.clip = _laserSoundFX;
+                break;
+            case 6:
+                _speed = 5.0f;
                 break;
             default:
                 //nothing
