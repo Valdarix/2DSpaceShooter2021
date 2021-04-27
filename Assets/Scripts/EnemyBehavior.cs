@@ -31,7 +31,7 @@ public class EnemyBehavior : MonoBehaviour
     private AudioSource _audioFXSource;
     private bool _canFire = true;
     private bool _canFireLeft = true;
-    private bool _canFireRight = true;
+    private bool _canFireRight = true;    
 
     private void Start()
     {

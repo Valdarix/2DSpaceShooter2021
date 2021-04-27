@@ -58,6 +58,7 @@ MonoBehaviour:
   _laserRightSide: {fileID: 2112372821294131226, guid: 8d9b3ae14d0fbeb4f9d874d39ec0f2c6, type: 3}
   _laserLeftSide: {fileID: 6299865898737839677, guid: a2bd7c0d9baa8fc4e82ec40d19d0b135, type: 3}
   _laserFX: {fileID: 8300000, guid: 3febed1080fb1c04e84e2804d3c3406d, type: 3}
+  _enemyTierLevel: 3
 --- !u!212 &7785348051157603719
 SpriteRenderer:
   m_ObjectHideFlags: 0
