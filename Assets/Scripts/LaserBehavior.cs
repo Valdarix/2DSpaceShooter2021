@@ -9,11 +9,7 @@ public class LaserBehavior : MonoBehaviour
     [SerializeField]
     private float _rotateSpeed = 0.0f;
     [SerializeField]
-    private bool _destroyOnTrigger = true;
-    [SerializeField]
-    private bool _fireRight = false;
-    [SerializeField]
-    private bool _fireLeft = false;
+    private bool _destroyOnTrigger = true;  
 
 
     private void Start()
@@ -23,6 +19,7 @@ public class LaserBehavior : MonoBehaviour
         { 
             StartCoroutine(Pulse());
         }    
+    
     }
 
     // Update is called once per frame
@@ -94,10 +91,9 @@ public class LaserBehavior : MonoBehaviour
         }
 
         if (this.CompareTag("EnemyLaser"))
-        {
-                      
-            transform.Translate(Vector3.down * _speed * Time.deltaTime);
-         
+        {                      
+          
+            transform.Translate(Vector3.down * _speed * Time.deltaTime);        
             
             
             if (transform.position.y < -8.0f)

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3897926680601710638}
   - component: {fileID: 1094895600565634087}
   - component: {fileID: 3077775704263618671}
+  - component: {fileID: 630108368195755690}
   m_Layer: 0
   m_Name: LeftBomb
   m_TagString: EnemyLaser
@@ -29,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 6299865898737839677}
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: -0.61, y: 1.52, z: 1.8627443}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.98053867, y: 0.9652663, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -46,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21edc490346b4e64e9ef6f3c98f10821, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 6
+  _speed: 9
   _rotateSpeed: 0
   _destroyOnTrigger: 1
 --- !u!212 &3897926680601710638
@@ -90,7 +91,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1337346551, guid: 71eb01d2d882d9442a92a1199940dd39, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 660770ed9e6043f408c5901ff522c220, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -114,18 +115,18 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.021157578, y: 0.024692476}
+  m_Offset: {x: 0.02328378, y: -0.022000074}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.57, y: 0.66}
+    oldSize: {x: 0.82, y: 1.41}
     newSize: {x: 1, y: 3}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.47811237, y: 2.7672672}
+  m_Size: {x: 0.719365, y: 1.1133771}
   m_EdgeRadius: 0
 --- !u!50 &3077775704263618671
 Rigidbody2D:
@@ -148,3 +149,22 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!95 &630108368195755690
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6299865898737839677}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7d787939dbf89514b9399bd381470141, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

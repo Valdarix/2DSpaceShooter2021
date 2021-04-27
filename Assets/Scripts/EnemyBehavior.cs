@@ -15,8 +15,8 @@ public class EnemyBehavior : MonoBehaviour
     private GameObject _explosion;
     [SerializeField]
     private int _enemyID;
-    private float RotateSpeed = 7f;
-    private float Radius = 1.0f;
+    private float RotateSpeed = 10f;
+    private float Radius = 1f;
     [SerializeField]
     private Transform _target;
     private float _angle;
@@ -30,6 +30,8 @@ public class EnemyBehavior : MonoBehaviour
     private AudioClip _laserFX;
     private AudioSource _audioFXSource;
     private bool _canFire = true;
+    private bool _canFireLeft = true;
+    private bool _canFireRight = true;
 
     private void Start()
     {
@@ -49,7 +51,9 @@ public class EnemyBehavior : MonoBehaviour
             if (_target == null)
             {
                 Debug.LogError("Target is NULL");
+                Debug.Log(transform.parent.name);
             }           
+                
         }
         _audioFXSource = this.GetComponent<AudioSource>();
         if (_audioFXSource == null)
@@ -71,35 +75,75 @@ public class EnemyBehavior : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Vector3 horizontalOffset = new Vector3(0, 0.8f, 0);
+        float rayLength = 50f;
         if (_canFire == true && (_enemyID == 2 || _enemyID == 3))
-        {
-            float rayLength = 50f;
-
+        {          
             RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, rayLength);
             if (hit.collider != null)
-            {
-              
+            {              
                 if (hit.collider.CompareTag("Player"))
                 {
                     //Fire at player!
                     Vector3 offset = new Vector3(0, 0, 0);
                     Instantiate(_laser, (transform.position + offset), Quaternion.identity);                   
                     _canFire = false;
-                    StartCoroutine(LaserCooldownTimer());
-
+                    StartCoroutine(LaserCooldownTimer("MainLaser"));
                 }
-            }             
-        }       
+            }           
+        }
+        if (_canFireRight && _enemyID == 3)
+        {           
+            RaycastHit2D hitRight = Physics2D.Raycast((transform.position + horizontalOffset), Vector2.right, rayLength);
+            if (hitRight.collider != null)
+            {
+                if (hitRight.collider.CompareTag("Player"))
+                {
+                    //Fire at player!
+                    Vector3 offset = new Vector3(0.769999981f, 0.75999999f, 0);
+                    Instantiate(_laserRightSide, (transform.position + offset), _laserRightSide.transform.rotation);
+                    _canFireRight = false;
+                    StartCoroutine(LaserCooldownTimer("RightCannon"));
+                }
+            }
+        }
+        if (_canFireLeft && _enemyID == 3)
+        {
+            RaycastHit2D hitLeft = Physics2D.Raycast((transform.position + horizontalOffset), Vector2.left, rayLength);
+            if (hitLeft.collider != null)
+            {
+                if (hitLeft.collider.CompareTag("Player"))
+                {
+                    //Fire at player!
+                    Vector3 offset = new Vector3(-0.769999981f, 0.75999999f, 0);
+                    Instantiate(_laserLeftSide, (transform.position + offset), _laserLeftSide.transform.rotation);
+                    _canFireLeft = false;
+                    StartCoroutine(LaserCooldownTimer("LeftCannon"));
+                }
+            }
+        }
     }
 
-    IEnumerator LaserCooldownTimer()
+    IEnumerator LaserCooldownTimer(string WeaponToCooldown)
     {
         var fireRate = 0.5f;
         if (_enemyID == 3)
-            fireRate = 1f;    
+            fireRate = 0.7f;    
         yield return new WaitForSeconds(fireRate);
-        
-        _canFire = true;
+
+        if (WeaponToCooldown == "MainLaser")
+        {
+            _canFire = true;
+        }  
+        else if (WeaponToCooldown == "RightCannon")
+        {
+            _canFireRight = true;
+        } 
+        else if (WeaponToCooldown == "LeftCannon")
+        {
+            _canFireLeft = true;
+        }
+
     }
 
     void MoveEnemy()
@@ -112,7 +156,8 @@ public class EnemyBehavior : MonoBehaviour
                     _angle += RotateSpeed * Time.deltaTime;
                     var offset = new Vector3(Mathf.Sin(_angle), Mathf.Cos(_angle),0) * Radius; 
                     transform.position = _target.transform.position + offset;
-                    break;
+                    transform.Rotate(Vector3.forward * 100 * Time.deltaTime);
+                    break;               
                 default:
                     transform.Translate(Vector3.down * _speed * Time.deltaTime);
                     break;

@@ -1288,71 +1288,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8117604038160700031, guid: 210dbe6bc85e3be41a49a05bf0356a05, type: 3}
   m_PrefabInstance: {fileID: 8117604038107849649}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1193190482
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1393924448852791602, guid: ba72eb008a0978e4ea54b4c857a71be0, type: 3}
-      propertyPath: _laserLeftSide
-      value: 
-      objectReference: {fileID: 6299865898737839677, guid: a2bd7c0d9baa8fc4e82ec40d19d0b135, type: 3}
-    - target: {fileID: 1393924448852791602, guid: ba72eb008a0978e4ea54b4c857a71be0, type: 3}
-      propertyPath: _laserRightSide
-      value: 
-      objectReference: {fileID: 1651176975475462059, guid: 8d9b3ae14d0fbeb4f9d874d39ec0f2c6, type: 3}
-    - target: {fileID: 1743728651922700665, guid: ba72eb008a0978e4ea54b4c857a71be0, type: 3}
-      propertyPath: m_Name
-      value: BomberEnemy
-      objectReference: {fileID: 0}
-    - target: {fileID: 1877383905009270020, guid: ba72eb008a0978e4ea54b4c857a71be0, type: 3}
-      propertyPath: m_RootOrder
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 1877383905009270020, guid: ba72eb008a0978e4ea54b4c857a71be0, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1877383905009270020, guid: ba72eb008a0978e4ea54b4c857a71be0, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 5.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1877383905009270020, guid: ba72eb008a0978e4ea54b4c857a71be0, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1877383905009270020, guid: ba72eb008a0978e4ea54b4c857a71be0, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1877383905009270020, guid: ba72eb008a0978e4ea54b4c857a71be0, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1877383905009270020, guid: ba72eb008a0978e4ea54b4c857a71be0, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1877383905009270020, guid: ba72eb008a0978e4ea54b4c857a71be0, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1877383905009270020, guid: ba72eb008a0978e4ea54b4c857a71be0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1877383905009270020, guid: ba72eb008a0978e4ea54b4c857a71be0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1877383905009270020, guid: ba72eb008a0978e4ea54b4c857a71be0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: ba72eb008a0978e4ea54b4c857a71be0, type: 3}
 --- !u!1 &1215596336
 GameObject:
   m_ObjectHideFlags: 0
@@ -1719,10 +1654,11 @@ MonoBehaviour:
   - {fileID: 1651078164559361737, guid: 15f3e5740497aaa45a30f57466cb65cb, type: 3}
   - {fileID: 2018031767134089113, guid: 3580ff2998026aa44a23add73bffafa1, type: 3}
   - {fileID: 396618999423597525, guid: adb4390c1fda7ea4c9f65c4c57b727b4, type: 3}
+  - {fileID: 5516283144032056305, guid: 8f811120ed6e72141b293a84b84a42cf, type: 3}
   - {fileID: 6072033046560038219, guid: 4b180e969fab502458d1afd8f5779aa4, type: 3}
   _enemyList:
   - {fileID: 1743728651922700665, guid: ba72eb008a0978e4ea54b4c857a71be0, type: 3}
-  - {fileID: 74495375222132963, guid: ed0debad4d8f83d4197e55018276e439, type: 3}
+  - {fileID: 4495319170907342599, guid: a82439e0c7f23c54a8d42defea89ee92, type: 3}
   - {fileID: 517768828903102998, guid: 94e3ba2183646334189fdafe038a1191, type: 3}
   _enemyContainer: {fileID: 2087119582}
   _powerUpContainer: {fileID: 351629423}
@@ -2045,7 +1981,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 14.600006}
+  m_AnchoredPosition: {x: 0, y: 14.600037}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1863826423

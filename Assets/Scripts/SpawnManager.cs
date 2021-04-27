@@ -59,7 +59,7 @@ public class SpawnManager : MonoBehaviour
                 _gameManager.NewWave();
                 _spawnTimer -= 1f;
                 _spawnEnemyWaitForSeconds = new WaitForSeconds(_spawnTimer);
-                Debug.Log("Wave: " + _currentWave + " Spawn Timer: " + _spawnTimer + " Wait for Seconds " + _spawnEnemyWaitForSeconds);
+               
                 switch (_currentWave)
                 {
                     case 2:
