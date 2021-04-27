@@ -1647,19 +1647,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enemyOject: {fileID: 1743728651922700665, guid: ba72eb008a0978e4ea54b4c857a71be0, type: 3}
   _asteroid: {fileID: 8774468926065045111, guid: 16a7de2fa6604e744a7c55e1578aa307, type: 3}
-  _powerUpObject:
-  - {fileID: 2804273758647037413, guid: 85cca7ec5fbcb4a4280cf18bc9cd7832, type: 3}
-  - {fileID: 8274289098923296332, guid: 83173f595ec523642a2e791803bd3de4, type: 3}
-  - {fileID: 2848474220478311192, guid: 3e6e9d401237c8e4a87e2389c09aec24, type: 3}
+  _powerUpObjectT1:
   - {fileID: 1651078164559361737, guid: 15f3e5740497aaa45a30f57466cb65cb, type: 3}
-  - {fileID: 2018031767134089113, guid: 3580ff2998026aa44a23add73bffafa1, type: 3}
+  - {fileID: 8274289098923296332, guid: 83173f595ec523642a2e791803bd3de4, type: 3}
+  _powerUpObjectT2:
+  - {fileID: 2848474220478311192, guid: 3e6e9d401237c8e4a87e2389c09aec24, type: 3}
+  - {fileID: 2804273758647037413, guid: 85cca7ec5fbcb4a4280cf18bc9cd7832, type: 3}
   - {fileID: 396618999423597525, guid: adb4390c1fda7ea4c9f65c4c57b727b4, type: 3}
-  - {fileID: 5516283144032056305, guid: 8f811120ed6e72141b293a84b84a42cf, type: 3}
+  _powerUpObjectT3:
   - {fileID: 6072033046560038219, guid: 4b180e969fab502458d1afd8f5779aa4, type: 3}
-  _enemyList:
+  - {fileID: 2018031767134089113, guid: 3580ff2998026aa44a23add73bffafa1, type: 3}
+  _enemyListT1:
   - {fileID: 1743728651922700665, guid: ba72eb008a0978e4ea54b4c857a71be0, type: 3}
-  - {fileID: 4495319170907342599, guid: a82439e0c7f23c54a8d42defea89ee92, type: 3}
+  _enemyListT2:
   - {fileID: 517768828903102998, guid: 94e3ba2183646334189fdafe038a1191, type: 3}
+  - {fileID: 4495319170907342599, guid: a82439e0c7f23c54a8d42defea89ee92, type: 3}
+  _enemyListT3:
+  - {fileID: 5516283144032056305, guid: 8f811120ed6e72141b293a84b84a42cf, type: 3}
   _enemyContainer: {fileID: 2087119582}
   _powerUpContainer: {fileID: 351629423}
   _spawnTimer: 5

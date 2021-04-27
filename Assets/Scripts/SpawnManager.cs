@@ -5,13 +5,19 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField]
-    private GameObject _enemyOject;
-    [SerializeField]
     private GameObject _asteroid;
     [SerializeField]
-    private GameObject[] _powerUpObject;
+    private GameObject[] _powerUpObjectT1;
     [SerializeField]
-    private GameObject[] _enemyList;
+    private GameObject[] _powerUpObjectT2;
+    [SerializeField]
+    private GameObject[] _powerUpObjectT3;
+    [SerializeField]
+    private GameObject[] _enemyListT1;
+    [SerializeField]
+    private GameObject[] _enemyListT2;
+    [SerializeField]
+    private GameObject[] _enemyListT3;
     private bool _canSpawn = false;   
     [SerializeField]
     private GameObject _enemyContainer;
@@ -20,9 +26,7 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private float _spawnTimer = 5.0f;
     [SerializeField]
-    private WaitForSeconds _spawnEnemyWaitForSeconds;
-    private float _lastUltraSpawn = 0f;
-    private float _timebetweenUltraSpawns = 5f;
+    private WaitForSeconds _spawnEnemyWaitForSeconds;   
     private int _maxEnemiesToSpawn = 10;
     private int _baseEnemiesPerLevel = 10;
     [SerializeField]
@@ -49,9 +53,9 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(3.0f);
         while (_canSpawn)
         {
-            Vector3 randomLocation = new Vector3(Random.Range(-8f, 8f), 7, 0);
-            GameObject newEnemy = Instantiate(_enemyList[Random.Range(0,_enemyList.Length)], randomLocation, Quaternion.identity);
-            newEnemy.transform.parent = _enemyContainer.transform;
+            //Get Enemy to Spawn. 3 Tier System
+            PickEnemy();
+            
             _maxEnemiesToSpawn--;            
             if (_maxEnemiesToSpawn == 0) //handle spawning new wave
             {               
@@ -81,27 +85,57 @@ public class SpawnManager : MonoBehaviour
         // Spawn the boss waves are completed
     }
 
+    private void PickEnemy()
+    {        
+        // roll random 100. Tier 1 = 0 - 60, Tier 2 = 61 - 85, Tier 3 = 75 - 99 
+        int randomRoll = Random.Range(1, 100);
+        Vector3 randomLocation = new Vector3(Random.Range(-8f, 8f), 7, 0);        
+        switch (randomRoll)
+        {
+            case int n when (n >= 0 && n <= 60):
+                GameObject newEnemyT1 = Instantiate(_enemyListT1[Random.Range(0,_enemyListT1.Length)], randomLocation, Quaternion.identity);
+                newEnemyT1.transform.parent = _enemyContainer.transform;
+                break;
+            case int n when (n >= 61 && n <= 85):
+                GameObject newEnemyT2 = Instantiate(_enemyListT2[Random.Range(0, _enemyListT2.Length)], randomLocation, Quaternion.identity);
+                newEnemyT2.transform.parent = _enemyContainer.transform;
+                break;
+            case int n when (n >= 86 && n <= 99):
+                GameObject newEnemyT3 = Instantiate(_enemyListT3[Random.Range(0, _enemyListT3.Length)], randomLocation, Quaternion.identity);
+                newEnemyT3.transform.parent = _enemyContainer.transform;
+                break;
+            default:              
+                break;
+        }     
+
+    }
+
     IEnumerator SpawnPowerup()
     {
         yield return new WaitForSeconds(3.0f);
         while (_canSpawn)
         {
             yield return new WaitForSeconds(Random.Range(4.0f, 8.0f));
-            int _powerupID;
-            // This is a poor implementation for limiting the rarity of the Ultra spawn, it requires the object to be at the end of the array to work. 
-            if (Time.time - _lastUltraSpawn > _timebetweenUltraSpawns)
+            // roll random 100. Tier 1 = 0 - 60, Tier 2 = 61 - 85, Tier 3 = 75 - 99 
+            int randomRoll = Random.Range(1, 100);
+            Vector3 randomLocation = new Vector3(Random.Range(-8f, 8f), 7, 0);           
+            switch (randomRoll)
             {
-                 _powerupID = Random.Range(0, _powerUpObject.Length);
-                _lastUltraSpawn = Time.time;              
+                case int n when (n >= 0 && n <= 60):
+                    GameObject newPowerupT1 = Instantiate(_powerUpObjectT1[Random.Range(0, _powerUpObjectT1.Length)], randomLocation, Quaternion.identity);
+                    newPowerupT1.transform.parent = _powerUpContainer.transform;
+                    break;
+                case int n when (n >= 61 && n <= 85):
+                    GameObject newPowerupT2 = Instantiate(_powerUpObjectT2[Random.Range(0, _powerUpObjectT2.Length)], randomLocation, Quaternion.identity);
+                    newPowerupT2.transform.parent = _powerUpContainer.transform;
+                    break;
+                case int n when (n >= 86 && n <= 99):
+                    GameObject newPowerupT3 = Instantiate(_powerUpObjectT3[Random.Range(0, _powerUpObjectT3.Length)], randomLocation, Quaternion.identity);
+                    newPowerupT3.transform.parent = _powerUpContainer.transform;
+                    break;
+                default:
+                    break;
             }
-            else
-            {
-                 _powerupID = Random.Range(0, _powerUpObject.Length - 1);
-            }
-            
-            Vector3 randomLocation = new Vector3(Random.Range(-8f, 8f), 7, 0);
-            GameObject newPowerup = Instantiate(_powerUpObject[_powerupID], randomLocation, Quaternion.identity);
-            newPowerup.transform.parent = _powerUpContainer.transform;
         }
     }
        
