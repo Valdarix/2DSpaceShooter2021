@@ -49,9 +49,7 @@ public class Powerup : MonoBehaviour
         {
             float step = _speed * Time.deltaTime;
             this.gameObject.transform.position = Vector3.MoveTowards(transform.position, _player.gameObject.transform.position, step);
-        }
-              
-        
+        }   
        
         if (transform.position.y < -8.0f)
         {          
