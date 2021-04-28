@@ -32,8 +32,7 @@ public class EnemyBehavior : MonoBehaviour
     private bool _canFire = true;
     private bool _canFireLeft = true;
     private bool _canFireRight = true;
-    [SerializeField]
-    private bool _isShielded = false;
+
 
     private void Start()
     {
@@ -60,8 +59,7 @@ public class EnemyBehavior : MonoBehaviour
         _audioFXSource = this.GetComponent<AudioSource>();
         if (_audioFXSource == null)
         {
-            Debug.LogError("Player: Audio Source is NULL on EnenmyID: " + _enemyID);
-             
+            Debug.LogError("Player: Audio Source is NULL on EnenmyID: " + _enemyID);             
         }
         else
         {
@@ -124,6 +122,29 @@ public class EnemyBehavior : MonoBehaviour
                 }
             }
         }
+        if (_canFire == true && _enemyID == 4)
+        {
+            float rayLengthforRam = 5f;
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, rayLengthforRam);
+            if (hit.collider != null)
+            {
+                if (hit.collider.CompareTag("Player"))
+                {
+                    //Ram the player!
+                    _speed = _speed * 3;                  
+                    _canFire = false;
+                    StartCoroutine(RamCoolDown());
+                }
+            }
+        }
+    }
+
+    IEnumerator RamCoolDown()
+    {
+        yield return new WaitForSeconds(0.5f);
+        _speed = 3;
+        _canFire = true;
+
     }
 
     IEnumerator LaserCooldownTimer(string WeaponToCooldown)
@@ -189,22 +210,15 @@ public class EnemyBehavior : MonoBehaviour
             }
         }
         else if (other.CompareTag("Laser"))
-        {
-            if (!_isShielded)
-            {
-                GameObject exp = Instantiate(_explosion, transform.position, Quaternion.identity);
-                exp.gameObject.GetComponent<Animator>().SetTrigger("CanExplode");
-                _speed = 0;
-                Destroy(this.gameObject);
-                _player.UpdateScore(10);
-            } else
-            {
-                _isShielded = false;
-            }
+        {           
+            GameObject exp = Instantiate(_explosion, transform.position, Quaternion.identity);
+            exp.gameObject.GetComponent<Animator>().SetTrigger("CanExplode");
+            _speed = 0;
+            Destroy(this.gameObject);
+            _player.UpdateScore(10);          
            
         }
 
     }
-
 
 }

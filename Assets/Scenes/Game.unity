@@ -1645,7 +1645,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 562300b2721e98f4f99934faabeb3b64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemyOject: {fileID: 1743728651922700665, guid: ba72eb008a0978e4ea54b4c857a71be0, type: 3}
   _asteroid: {fileID: 8774468926065045111, guid: 16a7de2fa6604e744a7c55e1578aa307, type: 3}
   _powerUpObjectT1:
   - {fileID: 1651078164559361737, guid: 15f3e5740497aaa45a30f57466cb65cb, type: 3}
@@ -1659,11 +1658,13 @@ MonoBehaviour:
   - {fileID: 2018031767134089113, guid: 3580ff2998026aa44a23add73bffafa1, type: 3}
   _enemyListT1:
   - {fileID: 1743728651922700665, guid: ba72eb008a0978e4ea54b4c857a71be0, type: 3}
+  - {fileID: 8287720995831558684, guid: cba0b2e28ff36da47b1ab12262018670, type: 3}
   _enemyListT2:
   - {fileID: 517768828903102998, guid: 94e3ba2183646334189fdafe038a1191, type: 3}
   - {fileID: 4495319170907342599, guid: a82439e0c7f23c54a8d42defea89ee92, type: 3}
   _enemyListT3:
   - {fileID: 5516283144032056305, guid: 8f811120ed6e72141b293a84b84a42cf, type: 3}
+  - {fileID: 8649840395192925987, guid: 4bfcf6ce709c52146b1f11708a299e0f, type: 3}
   _enemyContainer: {fileID: 2087119582}
   _powerUpContainer: {fileID: 351629423}
   _spawnTimer: 5
