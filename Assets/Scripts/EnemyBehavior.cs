@@ -53,9 +53,10 @@ public class EnemyBehavior : MonoBehaviour
             {
                 Debug.LogError("Target is NULL");
                 Debug.Log(transform.parent.name);
-            }           
+            } 
                 
         }
+       
         _audioFXSource = this.GetComponent<AudioSource>();
         if (_audioFXSource == null)
         {
@@ -65,6 +66,7 @@ public class EnemyBehavior : MonoBehaviour
         {
             _audioFXSource.clip = _laserFX;
         }
+
     }
      
     // Update is called once per frame
@@ -180,7 +182,20 @@ public class EnemyBehavior : MonoBehaviour
                     var offset = new Vector3(Mathf.Sin(_angle), Mathf.Cos(_angle),0) * Radius; 
                     transform.position = _target.transform.position + offset;
                     transform.Rotate(Vector3.forward * 100 * Time.deltaTime);
-                    break;               
+                    break;
+                case 5:
+                    transform.Translate(Vector3.down * _speed * Time.deltaTime);
+                    if (gameObject.transform.position.y < _player.gameObject.transform.position.y - 2.25f )
+                    {
+                        if (_canFire)
+                        {//Shot back at target
+                            Instantiate(_laser, transform.position, _laser.transform.rotation);
+                            _canFire = false;
+                            StartCoroutine(LaserCooldownTimer("MainLaser"));
+                        }
+
+                    }
+                    break;
                 default:
                     transform.Translate(Vector3.down * _speed * Time.deltaTime);
                     break;
