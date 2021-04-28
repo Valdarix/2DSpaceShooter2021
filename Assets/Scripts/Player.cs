@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Player : MonoBehaviour
 {
@@ -46,8 +47,7 @@ public class Player : MonoBehaviour
     private float _thrusterUpdateDelay = 0.25f;
     private bool _thrusterCharging = false;
     private bool _canTakeDamage = true;
-
-   
+  
 
     void Start()
     {
@@ -95,7 +95,12 @@ public class Player : MonoBehaviour
         if (_ammoCount > 0)
         {
             CheckFireLaser();
-        }     
+        }   
+        
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+
+        };    
     }
 
 

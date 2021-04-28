@@ -193,7 +193,7 @@ public class EnemyBehavior : MonoBehaviour
                     break;
                 case 5:
                     transform.Translate(Vector3.down * _speed * Time.deltaTime);
-                    if (gameObject.transform.position.y < _player.gameObject.transform.position.y - 2.25f )
+                    if (gameObject.transform.position.y < _player.gameObject.transform.position.y - 2.25f  && _player != null)
                     {
                         if (_canFire)
                         {//Shot back at target

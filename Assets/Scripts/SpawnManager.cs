@@ -121,7 +121,7 @@ public class SpawnManager : MonoBehaviour
             Vector3 randomLocation = new Vector3(Random.Range(-8f, 8f), 7, 0);           
             switch (randomRoll)
             {
-                case int n when (n >= 0 && n <= 60):
+                case int n when (n >= 1 && n <= 60):
                     GameObject newPowerupT1 = Instantiate(_powerUpObjectT1[Random.Range(0, _powerUpObjectT1.Length)], randomLocation, Quaternion.identity);
                     newPowerupT1.transform.parent = _powerUpContainer.transform;
                     break;
