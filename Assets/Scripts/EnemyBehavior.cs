@@ -31,7 +31,9 @@ public class EnemyBehavior : MonoBehaviour
     private AudioSource _audioFXSource;
     private bool _canFire = true;
     private bool _canFireLeft = true;
-    private bool _canFireRight = true;    
+    private bool _canFireRight = true;
+    [SerializeField]
+    private bool _isShielded = false;
 
     private void Start()
     {
@@ -188,11 +190,17 @@ public class EnemyBehavior : MonoBehaviour
         }
         else if (other.CompareTag("Laser"))
         {
-            GameObject exp = Instantiate(_explosion, transform.position, Quaternion.identity);           
-            exp.gameObject.GetComponent<Animator>().SetTrigger("CanExplode");
-            _speed = 0;
-            Destroy(this.gameObject);
-            _player.UpdateScore(10);           
+            if (!_isShielded)
+            {
+                GameObject exp = Instantiate(_explosion, transform.position, Quaternion.identity);
+                exp.gameObject.GetComponent<Animator>().SetTrigger("CanExplode");
+                _speed = 0;
+                Destroy(this.gameObject);
+                _player.UpdateScore(10);
+            } else
+            {
+                _isShielded = false;
+            }
            
         }
 
