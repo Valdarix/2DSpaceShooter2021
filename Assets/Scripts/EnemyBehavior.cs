@@ -78,8 +78,8 @@ public class EnemyBehavior : MonoBehaviour
     private void FixedUpdate()
     {
         Vector3 horizontalOffset = new Vector3(0, 0.8f, 0);
-        float rayLength = 50f;
-        if (_canFire == true && (_enemyID == 2 || _enemyID == 3))
+        float rayLength = 10f;
+        if (_canFire == true && (_enemyID == 2 || _enemyID == 3)) // front gun
         {          
             RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, rayLength);
             if (hit.collider != null)
@@ -89,6 +89,14 @@ public class EnemyBehavior : MonoBehaviour
                     //Fire at player!
                     Vector3 offset = new Vector3(0, 0, 0);
                     Instantiate(_laser, (transform.position + offset), Quaternion.identity);                   
+                    _canFire = false;
+                    StartCoroutine(LaserCooldownTimer("MainLaser"));
+                }
+                if (hit.collider.CompareTag("Powerup"))
+                {
+                    //Fire at player!
+                    Vector3 offset = new Vector3(0, 0, 0);
+                    Instantiate(_laser, (transform.position + offset), Quaternion.identity);
                     _canFire = false;
                     StartCoroutine(LaserCooldownTimer("MainLaser"));
                 }

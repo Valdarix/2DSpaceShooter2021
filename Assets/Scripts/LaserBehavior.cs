@@ -66,6 +66,12 @@ public class LaserBehavior : MonoBehaviour
                     }
                 }
             }
+            else if (other.CompareTag("Powerup"))
+            {
+                Powerup powerupToDestroy = other.transform.GetComponent<Powerup>();
+                powerupToDestroy.DestroyPowerup();
+                Destroy(this.gameObject);
+            }
         }
 
     }
