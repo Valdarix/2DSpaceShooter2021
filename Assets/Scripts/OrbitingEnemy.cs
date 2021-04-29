@@ -4,18 +4,14 @@ using UnityEngine;
 
 public class OrbitingEnemy : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (transform.position.y >= -5.5f)
         {
-            transform.Translate(Vector3.down * 1.5f * Time.deltaTime);
+            transform.Translate(Vector3.down * (1.5f * Time.deltaTime));
         }
         else
         {

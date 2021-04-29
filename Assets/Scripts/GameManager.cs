@@ -7,12 +7,11 @@ public class GameManager : MonoBehaviour
 {
     private bool isGameOver = false;
     private int _wave = 0;
-    [SerializeField]
-    private UIManager _ui;
+    [SerializeField] private UIManager _ui;
 
     private void Update()
     {        
-        if (Input.GetKeyDown(KeyCode.R) && (isGameOver == true))
+        if (Input.GetKeyDown(KeyCode.R) && isGameOver)
         {
             SceneManager.LoadScene(1);
         }

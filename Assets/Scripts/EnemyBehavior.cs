@@ -5,35 +5,27 @@ using UnityEngine;
 public class EnemyBehavior : MonoBehaviour
 {
     // Start is called before the first frame update
-    [SerializeField]
-    private float _speed = 4.0f;
-    [SerializeField]
-    private int _damageValue = 1;
+    [SerializeField] private float _speed = 4.0f;
+    [SerializeField] private int _damageValue = 1;
     private Player _player;
     private Animator _animator;
-    [SerializeField]
-    private GameObject _explosion;
-    [SerializeField]
-    private int _enemyID;
+    [SerializeField] private GameObject _explosion;
+    [SerializeField] private int _enemyID;
     private float RotateSpeed = 10f;
     private float Radius = 1f;
-    [SerializeField]
-    private Transform _target;
+    [SerializeField] private Transform _target;
     private float _angle;
-    [SerializeField]
-    private GameObject _laser;
-    [SerializeField]
-    private GameObject _laserRightSide;
-    [SerializeField]
-    private GameObject _laserLeftSide;
-    [SerializeField]
-    private AudioClip _laserFX;
+    [SerializeField] private GameObject _laser;
+    [SerializeField] private GameObject _laserRightSide;
+    [SerializeField] private GameObject _laserLeftSide;
+    [SerializeField] private AudioClip _laserFX;
     private AudioSource _audioFXSource;
     private bool _canFire = true;
     private bool _canFireLeft = true;
     private bool _canFireRight = true;
     private bool _canDodge = false;
     private int _randomLeftRight;
+    private static readonly int CanExplode = Animator.StringToHash("CanExplode");
 
 
     private void Start()
@@ -62,37 +54,36 @@ public class EnemyBehavior : MonoBehaviour
         _audioFXSource = this.GetComponent<AudioSource>();
         if (_audioFXSource == null)
         {
-            Debug.LogError("Player: Audio Source is NULL on EnenmyID: " + _enemyID);
+            Debug.LogError("Player: Audio Source is NULL on EnemyID: " + _enemyID);
         }
         else
         {
             _audioFXSource.clip = _laserFX;
         }
-        // Predetermine the dodge for dodge eneimes
+        // Predetermine the dodge for dodge enemies
         _randomLeftRight = Random.Range(1, 100);
-
 
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         MoveEnemy();
     }
 
     private void FixedUpdate()
     {
-        Vector3 horizontalOffset = new Vector3(0, 0.8f, 0);
-        float rayLength = 10f;
-        if (_canFire == true && (_enemyID == 2 || _enemyID == 3)) // front gun---should change to switch statement
+        var horizontalOffset = new Vector3(0, 0.8f, 0);
+        const float rayLength = 10f;
+        if (_canFire && (_enemyID == 2 || _enemyID == 3)) // front gun---should change to switch statement
         {
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, rayLength);
+            var hit = Physics2D.Raycast(transform.position, Vector2.down, rayLength);
             if (hit.collider != null)
             {
                 if (hit.collider.CompareTag("Player"))
                 {
                     //Fire at player!
-                    Vector3 offset = new Vector3(0, 0, 0);
+                    var offset = new Vector3(0, 0, 0);
                     Instantiate(_laser, (transform.position + offset), Quaternion.identity);
                     _canFire = false;
                     StartCoroutine(LaserCooldownTimer("MainLaser"));
@@ -100,7 +91,7 @@ public class EnemyBehavior : MonoBehaviour
                 if (hit.collider.CompareTag("Powerup"))
                 {
                     //Fire at player!
-                    Vector3 offset = new Vector3(0, 0, 0);
+                    var offset = new Vector3(0, 0, 0);
                     Instantiate(_laser, (transform.position + offset), Quaternion.identity);
                     _canFire = false;
                     StartCoroutine(LaserCooldownTimer("MainLaser"));
@@ -109,7 +100,7 @@ public class EnemyBehavior : MonoBehaviour
         }
         if (_canFireRight && _enemyID == 3)
         {
-            RaycastHit2D hitRight = Physics2D.Raycast((transform.position + horizontalOffset), Vector2.right, rayLength);
+            var hitRight = Physics2D.Raycast((transform.position + horizontalOffset), Vector2.right, rayLength);
             if (hitRight.collider != null)
             {
                 if (hitRight.collider.CompareTag("Player"))
@@ -124,7 +115,7 @@ public class EnemyBehavior : MonoBehaviour
         }
         if (_canFireLeft && _enemyID == 3)
         {
-            RaycastHit2D hitLeft = Physics2D.Raycast((transform.position + horizontalOffset), Vector2.left, rayLength);
+            var hitLeft = Physics2D.Raycast((transform.position + horizontalOffset), Vector2.left, rayLength);
             if (hitLeft.collider != null)
             {
                 if (hitLeft.collider.CompareTag("Player"))
@@ -137,54 +128,51 @@ public class EnemyBehavior : MonoBehaviour
                 }
             }
         }
-        if (_canFire == true && _enemyID == 4)
+
+        if (_canFire != true || _enemyID != 4) return;
         {
-            float rayLengthforRam = 5f;
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, rayLengthforRam);
-            if (hit.collider != null)
-            {
-                if (hit.collider.CompareTag("Player"))
-                {
-                    //Ram the player!
-                    _speed = _speed * 3;
-                    _canFire = false;
-                    StartCoroutine(RamCoolDown());
-                }
-            }
-        }       
+            const float rayLengthforRam = 5f;
+            var hit = Physics2D.Raycast(transform.position, Vector2.down, rayLengthforRam);
+            if (hit.collider == null) return;
+            if (!hit.collider.CompareTag("Player")) return;
+            //Ram the player!
+            _speed *= 3;
+            _canFire = false;
+            StartCoroutine(RamCoolDown());
+        }
     }
 
-    IEnumerator RamCoolDown()
+    private IEnumerator RamCoolDown()
     {
         yield return new WaitForSeconds(0.5f);
         _speed = 3;
         _canFire = true;
 
     }
-   
-    IEnumerator LaserCooldownTimer(string WeaponToCooldown)
+
+    private IEnumerator LaserCooldownTimer(string weaponToCooldown)
     {
         var fireRate = 0.5f;
         if (_enemyID == 3)
             fireRate = 0.7f;    
         yield return new WaitForSeconds(fireRate);
 
-        if (WeaponToCooldown == "MainLaser")
+        switch (weaponToCooldown)
         {
-            _canFire = true;
-        }  
-        else if (WeaponToCooldown == "RightCannon")
-        {
-            _canFireRight = true;
-        } 
-        else if (WeaponToCooldown == "LeftCannon")
-        {
-            _canFireLeft = true;
+            case "MainLaser":
+                _canFire = true;
+                break;
+            case "RightCannon":
+                _canFireRight = true;
+                break;
+            case "LeftCannon":
+                _canFireLeft = true;
+                break;
         }
 
     }
 
-    void MoveEnemy()
+    private void MoveEnemy()
     {
         if (transform.position.y >= -5.5f)
         {
@@ -192,17 +180,10 @@ public class EnemyBehavior : MonoBehaviour
             if (_canDodge == true)
             {
                
-                float step = _speed * 3 * Time.deltaTime;
+                var step = _speed * 3 * Time.deltaTime;
 
-                if (_randomLeftRight % 2 == 0) // Go right if even, left if odd to add some randomness to the dodge. 
-                {
-                    this.gameObject.transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x + 2, transform.position.y, 0), step);
-                }
-                else
-                {
-                    this.gameObject.transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x + -2, transform.position.y, 0), step);
-                }   
-                
+                this.gameObject.transform.position = Vector3.MoveTowards(transform.position, _randomLeftRight % 2 == 0 ? new Vector3(transform.position.x + 2, transform.position.y, 0) : new Vector3(transform.position.x + -2, transform.position.y, 0), step);
+
                 StartCoroutine(DisableDodge());
             }
 
@@ -212,10 +193,10 @@ public class EnemyBehavior : MonoBehaviour
                     _angle += RotateSpeed * Time.deltaTime;
                     var offset = new Vector3(Mathf.Sin(_angle), Mathf.Cos(_angle),0) * Radius; 
                     transform.position = _target.transform.position + offset;
-                    transform.Rotate(Vector3.forward * 100 * Time.deltaTime);
+                    transform.Rotate(Vector3.forward * (100 * Time.deltaTime));
                     break;
                 case 5:
-                    transform.Translate(Vector3.down * _speed * Time.deltaTime);
+                    transform.Translate(Vector3.down * (_speed * Time.deltaTime));
                     if (gameObject.transform.position.y < _player.gameObject.transform.position.y - 2.25f  && _player != null)
                     {
                         if (_canFire)
@@ -228,7 +209,7 @@ public class EnemyBehavior : MonoBehaviour
                     }
                     break;
                 default:
-                    transform.Translate(Vector3.down * _speed * Time.deltaTime);
+                    transform.Translate(Vector3.down * (_speed * Time.deltaTime));
                     break;
             }            
         }
@@ -238,9 +219,9 @@ public class EnemyBehavior : MonoBehaviour
         }    
         
        
-    } 
+    }
 
-    IEnumerator DisableDodge()
+    private IEnumerator DisableDodge()
     {
         yield return new WaitForSeconds(0.1f);
         _canDodge = false;
@@ -256,29 +237,23 @@ public class EnemyBehavior : MonoBehaviour
         if (other.CompareTag("Player"))
         {            
             //Damage Player
-            Player player = other.transform.GetComponent<Player>();
-            if (player != null)
-            {
-                //Apply Damange to player
-                player.DamagePlayer(_damageValue);
-                GameObject exp = Instantiate(_explosion, transform.position, Quaternion.identity);       
-                exp.gameObject.GetComponent<Animator>().SetTrigger("CanExplode");
-                _speed = 0;
-                Destroy(this.gameObject);
-
-            }
+            var player = other.transform.GetComponent<Player>();
+            if (player == null) return;
+            //Apply Damage to player
+            player.DamagePlayer(_damageValue);
+            var exp = Instantiate(_explosion, transform.position, Quaternion.identity);       
+            exp.gameObject.GetComponent<Animator>().SetTrigger(CanExplode);
+            _speed = 0;
+            Destroy(this.gameObject);
         }
         else if (other.CompareTag("Laser"))
         {           
-            GameObject exp = Instantiate(_explosion, transform.position, Quaternion.identity);
-            exp.gameObject.GetComponent<Animator>().SetTrigger("CanExplode");
+            var exp = Instantiate(_explosion, transform.position, Quaternion.identity);
+            exp.gameObject.GetComponent<Animator>().SetTrigger(CanExplode);
             _speed = 0;
             Destroy(this.gameObject);
-            _player.UpdateScore(10);          
-           
+            _player.UpdateScore(10);
         }
-
-    }  
-
+    }
 
 }

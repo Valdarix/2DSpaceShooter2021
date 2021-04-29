@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class Asteroid : MonoBehaviour
 {
-    [SerializeField]
-    private float _rotateSpeed = 5.0f;
-    [SerializeField]
-    private int _health = 5;   
+    [SerializeField] private float _rotateSpeed = 5.0f;
+    [SerializeField] private int _health = 5;   
     private SpawnManager _sm;
     private Animator _animator;
-    [SerializeField]
-    private GameObject _explosion;
+    [SerializeField] private GameObject _explosion;
+
+    private static readonly int CanExplode = Animator.StringToHash("CanExplode");
+
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        Vector3 randomLocation = new Vector3(Random.Range(-8f, 8f), Random.Range(4f, 6f), 0);
+        var randomLocation = new Vector3(Random.Range(-8f, 8f), Random.Range(4f, 6f), 0);
         gameObject.transform.position = randomLocation;
 
         _animator = gameObject.GetComponent<Animator>();
@@ -33,25 +33,20 @@ public class Asteroid : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        transform.Rotate(Vector3.forward * _rotateSpeed * Time.deltaTime);
+        transform.Rotate(Vector3.forward * (_rotateSpeed * Time.deltaTime));
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Laser"))
-        {
-            _health--;
-         
-
-            if (_health == 0)
-            {
-                GameObject exp = Instantiate(_explosion, transform.position, Quaternion.identity);             
-                exp.gameObject.GetComponent<Animator>().SetTrigger("CanExplode");
-                Destroy(this.gameObject);
-                _sm.StartSpawning();
-            }
-        }
+        if (!other.CompareTag("Laser")) return;
+        _health--;
+        
+        if (_health != 0) return;
+        var exp = Instantiate(_explosion, transform.position, Quaternion.identity);             
+        exp.gameObject.GetComponent<Animator>().SetTrigger(CanExplode);
+        Destroy(this.gameObject);
+        _sm.StartSpawning();
     }
 }

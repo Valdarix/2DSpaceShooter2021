@@ -6,12 +6,9 @@ using UnityEngine;
 public class Powerup : MonoBehaviour
 {   
 
-    [SerializeField]
-    private float _speed = 3.0f; 
-    [SerializeField]
-    private int _powerUpID;
-    [SerializeField]
-    private AudioClip _audioClip;
+    [SerializeField] private float _speed = 3.0f; 
+    [SerializeField] private int _powerUpID;
+    [SerializeField] private AudioClip _audioClip;
     private AudioSource _as;
     private Player _player;
     private bool _isMovingToPlayer = false;
@@ -33,7 +30,7 @@ public class Powerup : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
 
         if (Input.GetKeyDown(KeyCode.C))
@@ -41,14 +38,17 @@ public class Powerup : MonoBehaviour
             _isMovingToPlayer = true;
         }
         
-        if (_isMovingToPlayer == false)
+        switch (_isMovingToPlayer)
         {
-            transform.Translate(Vector3.down * _speed * Time.deltaTime);        
-        }
-        else if (_isMovingToPlayer == true)
-        {
-            float step = _speed * Time.deltaTime;
-            this.gameObject.transform.position = Vector3.MoveTowards(transform.position, _player.gameObject.transform.position, step);
+            case false:
+                transform.Translate(Vector3.down * (_speed * Time.deltaTime));
+                break;
+            case true:
+            {
+                var step = _speed * Time.deltaTime;
+                this.gameObject.transform.position = Vector3.MoveTowards(transform.position, _player.gameObject.transform.position, step);
+                break;
+            }
         }   
        
         if (transform.position.y < -8.0f)
@@ -57,22 +57,19 @@ public class Powerup : MonoBehaviour
         }
     }
 
-
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (!other.CompareTag("Player")) return;
+        var player = other.transform.GetComponent<Player>();
+
+        if (player != null)
         {
-            Player player = other.transform.GetComponent<Player>();
-
-            if (player != null)
-            {
-                player.EnablePowerUp(_powerUpID);
-                _as.Play();
-                gameObject.GetComponent<SpriteRenderer>().enabled = false;
-            }
-
-            Destroy(gameObject,1f);
+            player.EnablePowerUp(_powerUpID);
+            _as.Play();
+            gameObject.GetComponent<SpriteRenderer>().enabled = false;
         }
+
+        Destroy(gameObject,1f);
     }
     public void DestroyPowerup()
     {
