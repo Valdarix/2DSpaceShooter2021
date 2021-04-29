@@ -5,12 +5,9 @@ using System;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField]
-    private int _lives = 3;
-    [SerializeField]
-    private int _maxLives = 3;
-    [SerializeField]
-    private float _speed = 5.0f;
+    [SerializeField] private int _lives = 3;
+    [SerializeField] private int _maxLives = 3;
+    [SerializeField] private float _speed = 5.0f;
     private bool _laserCanFire = true;
     private int _powerupID = -1; // 0 = Triple Shot 1 = Speedboost 2 = shields
     private int _score = 0;
@@ -20,26 +17,17 @@ public class Player : MonoBehaviour
     private int _maxAmmo = 15;
     private int _thrusterPower = 15;
     private float _thrusterBoost = 3.0f;
-    [SerializeField]
-    private GameObject _playerShieldObject;
-    [SerializeField]
-    private float _laserCooldownTimer = 0.5f;
-    [SerializeField]
-    private GameObject _laserPrefab;      
-    [SerializeField]
-    private GameObject _powerUp;
-    [SerializeField]
-    private GameObject _powerUpUltra;
-    [SerializeField]
-    private GameObject _explosion;
-    [SerializeField]
-    private UIManager _ui;
-    [SerializeField]
-    private AudioClip _laserSoundFX;
-    [SerializeField]
-    private AudioClip _powerUpSFX;
-    [SerializeField]
-    private AudioClip _powerUpUltraSFX;
+    [SerializeField] private GameObject _playerShieldObject;
+    [SerializeField] private float _laserCooldownTimer = 0.5f;
+    [SerializeField] private GameObject _laserPrefab;      
+    [SerializeField] private GameObject _powerUp;
+    [SerializeField] private GameObject _powerUpUltra;
+    [SerializeField] private GameObject _explosion;
+    [SerializeField] private GameObject _misslePrefab;
+    [SerializeField] private UIManager _ui;
+    [SerializeField] private AudioClip _laserSoundFX;
+    [SerializeField] private AudioClip _powerUpSFX;
+    [SerializeField] private AudioClip _powerUpUltraSFX;
     private AudioSource _audioFXSource;
     private Animator _animator;
     private SpawnManager _spawnManger;
@@ -47,6 +35,8 @@ public class Player : MonoBehaviour
     private float _thrusterUpdateDelay = 0.25f;
     private bool _thrusterCharging = false;
     private bool _canTakeDamage = true;
+    private int _homingMissleCount = 0;
+    private bool _missleCanFire = true;
   
 
     void Start()
@@ -145,7 +135,7 @@ public class Player : MonoBehaviour
             _thrusterBoost = 1.0f;
         }    
 
-        transform.Translate(direction * ((_speed + _thrusterBoost) * _speedBoostMultiplier) * Time.deltaTime);
+        transform.Translate(direction * ((_speed + _thrusterBoost) * _speedBoostMultiplier * Time.deltaTime));
 
         float yClamp = Mathf.Clamp(transform.position.y, -4f, 6f);
         transform.position = new Vector3(transform.position.x, yClamp, 0);
@@ -170,6 +160,10 @@ public class Player : MonoBehaviour
                 case 5: // Shield Pulse doesnt take ammo
                     InstantiateWeapon(_powerUpUltra);
                     break;
+                case 7:
+                    Instantiate(_misslePrefab);
+                    _powerupID = -1; // Only allow the player one homing missle. 
+                    break;
                 default:
                     InstantiateWeapon(_laserPrefab);
                     _ammoCount--;
@@ -181,6 +175,19 @@ public class Player : MonoBehaviour
             _laserCanFire = false;
             StartCoroutine(LaserCooldownTimer());
         }
+        if (Input.GetKeyDown(KeyCode.F) && _missleCanFire && _homingMissleCount > 0)
+        {
+            Instantiate(_misslePrefab);
+            _homingMissleCount--;
+            if (_homingMissleCount == 0)
+            {
+                _powerupID = -1; // Only allow the player one homing missle. 
+            }
+
+            _missleCanFire = false;
+            StartCoroutine(MissleCooldownTimer());
+        }
+        
     }
 
     private void InstantiateWeapon(GameObject weaponProjectile)
@@ -193,6 +200,11 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(_laserCooldownTimer);
         _laserCanFire = true;
+    }
+    IEnumerator MissleCooldownTimer()
+    {
+        yield return new WaitForSeconds(_laserCooldownTimer);
+        _missleCanFire = true;
     }
 
     public void DamagePlayer(int DamageAmount)
@@ -231,7 +243,7 @@ public class Player : MonoBehaviour
                 Destroy(gameObject);              
             }
         }       
-     }
+    }
 
     public void EnablePowerUp(int powerupID)
     {        
@@ -271,6 +283,10 @@ public class Player : MonoBehaviour
                 break;
             case 6:
                 _speed = 0;
+                break;
+            case 7:
+                // TODO: Set Sound;
+                _homingMissleCount = 2;
                 break;
             default:
                 //nothing
@@ -315,6 +331,9 @@ public class Player : MonoBehaviour
             case 6:
                 _speed = 5.0f;
                 break;
+            case 7:
+                _audioFXSource.clip = _laserSoundFX;
+                break;
             default:
                 //nothing
                 break;
@@ -348,7 +367,7 @@ public class Player : MonoBehaviour
                 // do nothing full health. Later we can toggle these off
                 gameObject.transform.Find("LeftWingDamage").transform.gameObject.SetActive(false);
                 gameObject.transform.Find("RightWingDamage").transform.gameObject.SetActive(false);
-               break;
+                break;
         }
     }
 
@@ -366,11 +385,4 @@ public class Player : MonoBehaviour
         }       
     }
 
-    IEnumerator EnableWeakShield()
-    { // Using this to provide cool weak shield effect when a player takes damage.
-        UpdateShieldStatus(true, 3);
-        yield return new WaitForSeconds(0.5f);
-        _canTakeDamage = true;
-        UpdateShieldStatus(false, 0);
-    }    
 }

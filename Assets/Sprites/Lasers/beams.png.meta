@@ -132,7 +132,7 @@ TextureImporter:
         width: 57
         height: 66
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -140,6 +140,48 @@ TextureImporter:
       bones: []
       spriteID: 18d152edb40cb724d8e9cd81ea90cb35
       internalID: -1337346551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beams_Homing
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 55
+        width: 74
+        height: 69
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 23, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c1ac3655d7a9f8449317b670c818160
+      internalID: -1614654266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beams_0
+      rect:
+        serializedVersion: 2
+        x: 77
+        y: 300
+        width: 35
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 49766f28d54dbea44ad890907b6a855a
+      internalID: -690307430
       vertices: []
       indices: 
       edges: []
@@ -155,8 +197,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      beams_0: -690307430
       Rockets: -1337346551
       EnemyLaser: 54583160
+      beams_Homing: -1614654266
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

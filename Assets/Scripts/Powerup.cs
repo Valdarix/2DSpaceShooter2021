@@ -43,11 +43,11 @@ public class Powerup : MonoBehaviour
         
         if (_isMovingToPlayer == false)
         {
-            transform.Translate(Vector3.down * _speed * Time.deltaTime);        
+            transform.Translate(Vector3.down * (_speed * Time.deltaTime));        
         }
         else if (_isMovingToPlayer == true)
         {
-            float step = _speed * Time.deltaTime;
+            var step = _speed * Time.deltaTime;
             this.gameObject.transform.position = Vector3.MoveTowards(transform.position, _player.gameObject.transform.position, step);
         }   
        
