@@ -1,37 +1,32 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class LaserBehavior : MonoBehaviour
 {
-    [SerializeField]
-    private float _speed = 0.0f;
-    [SerializeField]
-    private float _rotateSpeed = 0.0f;
-    [SerializeField]
-    private bool _destroyOnTrigger = true;  
-
+    [FormerlySerializedAs("_speed")] [SerializeField]private float speed = 1.0f;
+    [FormerlySerializedAs("_rotateSpeed")] [SerializeField] private float rotateSpeed = 1.0f;
+    [FormerlySerializedAs("_destroyOnTrigger")] [SerializeField] private bool destroyOnTrigger = true;  
 
     private void Start()
     {
         // if this is false we don't want to destroy on trigger so we start the cooldown for destruction on spawn
-        if (_destroyOnTrigger == false)
+        if (destroyOnTrigger == false)
         { 
             StartCoroutine(Pulse());
-        }    
-    
+        }
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
 
-        if (_speed > 0f)
+        if (speed > 0f)
         {
             HandleMovement();
         }
 
-        if (_rotateSpeed > 0f)
+        if (rotateSpeed > 0f)
         {
             HandleRotate();
         }
@@ -42,36 +37,30 @@ public class LaserBehavior : MonoBehaviour
     {   
         if (this.CompareTag("Laser"))
         {
-            if (other.CompareTag("Enemy"))
+            if (other.CompareTag("Enemy") || other.CompareTag("Asteroid"))
             {
-                if (_destroyOnTrigger == true)
+                if (destroyOnTrigger)
                 {
                     Destroy(this.gameObject);
                 }
             }
         }
 
-        if (this.CompareTag("EnemyLaser"))
+        if (!this.CompareTag("EnemyLaser")) return;
+        if (other.CompareTag("Player"))
         {
-            if (other.CompareTag("Player"))
-            {
-                if (_destroyOnTrigger == true)
-                {
-                    Player player = other.transform.GetComponent<Player>();
-                    if (player != null)
-                    {
-                        //Apply Damange to player
-                        player.DamagePlayer(1);
-                        Destroy(this.gameObject);
-                    }
-                }
-            }
-            else if (other.CompareTag("Powerup"))
-            {
-                Powerup powerupToDestroy = other.transform.GetComponent<Powerup>();
-                powerupToDestroy.DestroyPowerup();
-                Destroy(this.gameObject);
-            }
+            if (destroyOnTrigger != true) return;
+            var player = other.transform.GetComponent<Player>();
+            if (player == null) return;
+            //Apply Damage to player
+            player.DamagePlayer(1);
+            Destroy(this.gameObject);
+        }
+        else if (other.CompareTag("Powerup"))
+        {
+            var powerupToDestroy = other.transform.GetComponent<Powerup>();
+            powerupToDestroy.DestroyPowerup();
+            Destroy(this.gameObject);
         }
 
     }
@@ -81,47 +70,27 @@ public class LaserBehavior : MonoBehaviour
         
         if (this.CompareTag("Laser"))
         { 
-            transform.Translate(Vector3.up * _speed * Time.deltaTime);
+            transform.Translate(Vector3.up * (speed * Time.deltaTime));
 
             if (transform.position.y > 8.0f)
             {
-                if (transform.parent != null)
-                {
-                    Destroy(transform.parent.gameObject);
-                }
-                else
-                {
-                    Destroy(this.gameObject);
-                }
+                Destroy(this.gameObject);
             }
         }
+        
+        if (!this.CompareTag("EnemyLaser")) return;
+        transform.Translate(Vector3.down * (speed * Time.deltaTime));
 
-        if (this.CompareTag("EnemyLaser"))
-        {                      
-          
-            transform.Translate(Vector3.down * _speed * Time.deltaTime);        
-            
-            
-            if (transform.position.y < -8.0f)
-            {
-                if (transform.parent != null)
-                {
-                    Destroy(transform.parent.gameObject);
-                }
-                else
-                {
-                    Destroy(this.gameObject);
-                }
-            }
-        }
+        if (!(transform.position.y < -8.0f)) return;
+        Destroy(this.gameObject);
     }
 
     private void HandleRotate()
     {
-        transform.Rotate(Vector3.forward * _rotateSpeed * Time.deltaTime);
+        transform.Rotate(Vector3.forward * (rotateSpeed * Time.deltaTime));
     }
 
-    IEnumerator Pulse()
+    private IEnumerator Pulse()
     {
         yield return new WaitForSeconds(1.2f);
         Destroy(gameObject);

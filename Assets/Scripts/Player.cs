@@ -36,10 +36,12 @@ public class Player : MonoBehaviour
     private bool _thrusterCharging = false;
     private bool _canTakeDamage = true;
     private int _homingMissleCount = 0;
-    private bool _missleCanFire = true;
-  
+    private bool _missileCanFire = true;
+    private static readonly int CanExplode = Animator.StringToHash("CanExplode");
+    private static readonly int IsMoving = Animator.StringToHash("isMoving");
+    private static readonly int XInput = Animator.StringToHash("xInput");
 
-    void Start()
+    private void Start()
     {
         //take the current position and assign a start position of (0,0,0)
         transform.position = new Vector3(0,0,0);
@@ -55,7 +57,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            // Semd default UI Elements
+            // Send default UI Elements
             _ui.UpdateAmmoCount(_ammoCount, _maxAmmo);
         }
 
@@ -74,41 +76,37 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("Player: Animator not set");
         }
-        _score = 0;      
+        _score = 0;
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {                
-        MovePlayer();       
-   
-        if (_ammoCount > 0)
+        MovePlayer();
+
+        if (_ammoCount <= 0) return;
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.F))
         {
             CheckFireLaser();
-        }   
-        
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-
-        };    
+        }
     }
 
 
-    void MovePlayer()
+    private void MovePlayer()
     {           
-        float horizontalInput = Input.GetAxis("Horizontal");        
-        float verticalInput = Input.GetAxis("Vertical");        
-        Vector3 direction = new Vector3(horizontalInput, verticalInput, 0).normalized;        
+        var horizontalInput = Input.GetAxis("Horizontal");        
+        var verticalInput = Input.GetAxis("Vertical");        
+        var direction = new Vector3(horizontalInput, verticalInput, 0).normalized;        
 
         if (horizontalInput == 0f)
         {
-            _animator.SetBool("isMoving",false);
-            _animator.SetFloat("xInput", horizontalInput);      
+            _animator.SetBool(IsMoving,false);
+            _animator.SetFloat(XInput, horizontalInput);      
         }
         else        
         {
-            _animator.SetBool("isMoving", true);
-            _animator.SetFloat("xInput", horizontalInput);          
+            _animator.SetBool(IsMoving, true);
+            _animator.SetFloat(XInput, horizontalInput);          
         }
         if (Input.GetKey(KeyCode.LeftShift) && _thrusterCharging == false)
         { 
@@ -133,20 +131,20 @@ public class Player : MonoBehaviour
         else
         { 
             _thrusterBoost = 1.0f;
-        }    
+        }
 
         transform.Translate(direction * ((_speed + _thrusterBoost) * _speedBoostMultiplier * Time.deltaTime));
-
-        float yClamp = Mathf.Clamp(transform.position.y, -4f, 6f);
+        var yClamp = Mathf.Clamp(transform.position.y, -4f, 6f);
         transform.position = new Vector3(transform.position.x, yClamp, 0);
-
         if (transform.position.x >= 11.5 || (transform.position.x <= -11.5))
-        {           
-            transform.position = new Vector3(transform.position.x * -1, transform.position.y,0);            
+        {
+            transform.position = new Vector3(transform.position.x * -1, transform.position.y, 0);            
         }     
 
     }
-    void CheckFireLaser()
+
+    // ReSharper disable Unity.PerformanceAnalysis
+    private void CheckFireLaser()
     {   
         if (Input.GetKeyDown(KeyCode.Space) && _laserCanFire)
         {                        
@@ -160,10 +158,6 @@ public class Player : MonoBehaviour
                 case 5: // Shield Pulse doesnt take ammo
                     InstantiateWeapon(_powerUpUltra);
                     break;
-                case 7:
-                    Instantiate(_misslePrefab);
-                    _powerupID = -1; // Only allow the player one homing missle. 
-                    break;
                 default:
                     InstantiateWeapon(_laserPrefab);
                     _ammoCount--;
@@ -175,74 +169,69 @@ public class Player : MonoBehaviour
             _laserCanFire = false;
             StartCoroutine(LaserCooldownTimer());
         }
-        if (Input.GetKeyDown(KeyCode.F) && _missleCanFire && _homingMissleCount > 0)
-        {
-            Instantiate(_misslePrefab);
-            _homingMissleCount--;
-            if (_homingMissleCount == 0)
-            {
-                _powerupID = -1; // Only allow the player one homing missle. 
-            }
+   
+        if (!Input.GetKeyDown(KeyCode.F) || !_missileCanFire || _homingMissleCount <= 0) return;
+        var enemyTagCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
+        if (enemyTagCount == 0) return;
 
-            _missleCanFire = false;
-            StartCoroutine(MissleCooldownTimer());
+        InstantiateWeapon(_misslePrefab);
+        _homingMissleCount--;
+        _ui.UpdateMissileUI(_homingMissleCount);
+        if (_homingMissleCount == 0)
+        {
+            _powerupID = -1; 
         }
-        
+        _missileCanFire = false;
+        StartCoroutine(MissileCooldownTimer());
     }
 
     private void InstantiateWeapon(GameObject weaponProjectile)
     {
-        Vector3 offset = new Vector3(0.0f, 1.05f, 0.0f);
+        var offset = new Vector3(0.0f, 1.05f, 0.0f);
         Instantiate(weaponProjectile, (transform.position + offset), Quaternion.identity);
     }
 
-    IEnumerator LaserCooldownTimer()
+    private IEnumerator LaserCooldownTimer()
     {
         yield return new WaitForSeconds(_laserCooldownTimer);
         _laserCanFire = true;
     }
-    IEnumerator MissleCooldownTimer()
+    IEnumerator MissileCooldownTimer()
     {
         yield return new WaitForSeconds(_laserCooldownTimer);
-        _missleCanFire = true;
+        _missileCanFire = true;
     }
 
-    public void DamagePlayer(int DamageAmount)
+    public void DamagePlayer(int damageAmount)
     {
-        if (_lives > 0) // only damage player if they are alive and if not shielded
+        if (_lives <= 0) return;
+        if (_playerShieldObject.activeInHierarchy)
         {
-            if (_playerShieldObject.activeInHierarchy == true)
+            _shieldStrength--;
+            _ui.UpdateShield(_shieldStrength);
+            if (_shieldStrength == 0)
             {
-                _shieldStrength--;
-                _ui.UpdateShield(_shieldStrength);
-                if (_shieldStrength == 0)
-                {
-                    _playerShieldObject.SetActive(false);
-                }                
-            }
-            else if (_canTakeDamage == true)
-            {
-                CameraShake.cameraInstance.ShakeCamera();
-                _lives = _lives - DamageAmount;
-                UpdateDamageFX(_lives);
-                // The code below is for a special shield type, work in progress.
-               //_canTakeDamage = false;
-               // StartCoroutine(EnableWeakShield());
-            }
+                _playerShieldObject.SetActive(false);
+            }                
+        }
+        else if (_canTakeDamage)
+        {
+            CameraShake.CameraInstance.ShakeCamera();
+            _lives = _lives - damageAmount;
+            UpdateDamageFX(_lives);
+        }
             
-            _ui.UpdateLives(_lives);
-            if (_lives <= 0)
-            {
-                _spawnManger.StopSpawning();
-                UpdateDamageFX(_lives);
-                gameObject.transform.Find("Thruster").transform.gameObject.SetActive(false);
-                gameObject.transform.Find("PlayerShield").transform.gameObject.SetActive(false);
-                _speed = 0;
-                GameObject exp = Instantiate(_explosion, transform.position, Quaternion.identity);
-                exp.gameObject.GetComponent<Animator>().SetTrigger("CanExplode");
-                Destroy(gameObject);              
-            }
-        }       
+        _ui.UpdateLives(_lives);
+        
+        if (_lives > 0) return;
+        _spawnManger.StopSpawning();
+        UpdateDamageFX(_lives);
+        gameObject.transform.Find("Thruster").transform.gameObject.SetActive(false);
+        gameObject.transform.Find("PlayerShield").transform.gameObject.SetActive(false);
+        _speed = 0;
+        GameObject exp = Instantiate(_explosion, transform.position, Quaternion.identity);
+        exp.gameObject.GetComponent<Animator>().SetTrigger(CanExplode);
+        Destroy(gameObject);
     }
 
     public void EnablePowerUp(int powerupID)
@@ -287,25 +276,21 @@ public class Player : MonoBehaviour
             case 7:
                 // TODO: Set Sound;
                 _homingMissleCount = 2;
+                _ui.UpdateMissileUI(_homingMissleCount);
                 break;
-            default:
-                //nothing
-                break;                
         }
         StartCoroutine(PowerUpTimer());
     }
 
-    private void UpdateShieldStatus(bool Toggle, int Strength)
+    private void UpdateShieldStatus(bool toggle, int strength)
     {
-        if (_playerShieldObject != null)
-        {
-            _playerShieldObject.SetActive(Toggle);
-            _shieldStrength = Strength;
-            _ui.UpdateShield(_shieldStrength);
-        }
+        if (_playerShieldObject == null) return;
+        _playerShieldObject.SetActive(toggle);
+        _shieldStrength = strength;
+        _ui.UpdateShield(_shieldStrength);
     }
 
-    IEnumerator PowerUpTimer()
+    private IEnumerator PowerUpTimer()
     {
         yield return new WaitForSeconds(5.0f);       
         switch (_powerupID)
@@ -334,10 +319,6 @@ public class Player : MonoBehaviour
             case 7:
                 _audioFXSource.clip = _laserSoundFX;
                 break;
-            default:
-                //nothing
-                break;
-
         }
         _powerupID = -1;
        
@@ -349,9 +330,9 @@ public class Player : MonoBehaviour
         _ui.UpdateScoreUI(_score);
     }
 
-    private void UpdateDamageFX(int _lives)
+    private void UpdateDamageFX(int lives)
     {        
-        switch (_lives)
+        switch (lives)
         {           
             case 0:
                 //Do nothing player will die 
@@ -371,9 +352,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    IEnumerator ChargeThruster()
+    private IEnumerator ChargeThruster()
     {
-        while (_thrusterCharging == true)
+        while (_thrusterCharging)
         {
             yield return new WaitForSeconds(0.5f);
             _thrusterPower++;            

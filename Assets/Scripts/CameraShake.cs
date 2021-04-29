@@ -4,20 +4,19 @@ using UnityEngine;
 
 public class CameraShake : MonoBehaviour
 {
-    public static CameraShake cameraInstance;    
+    public static CameraShake CameraInstance;    
 
-    [SerializeField]
-    private Transform _camTransform;
+    [SerializeField] private Transform _camTransform;
     private Vector3 _camStartPos;    
     private float _shakeTime = 0f;
-    private float _shakeIntensity = 0.3f;
+    private readonly float _shakeIntensity = 0.3f;
   
     // Start is called before the first frame update
     private void Awake()
     {
-        if (cameraInstance == null)
+        if (CameraInstance == null)
         {
-            cameraInstance = this;
+            CameraInstance = this;
             DontDestroyOnLoad(this);
         } else
         {
@@ -25,13 +24,13 @@ public class CameraShake : MonoBehaviour
         }    
     }
 
-    void Start()
+    private void Start()
     {
         _camStartPos = _camTransform.localPosition;
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (_shakeTime > 0)
         {
@@ -44,7 +43,6 @@ public class CameraShake : MonoBehaviour
             _camTransform.position = _camStartPos;
         }
     }
-
     public void ShakeCamera()
     {   
         _shakeTime = 0.5f;

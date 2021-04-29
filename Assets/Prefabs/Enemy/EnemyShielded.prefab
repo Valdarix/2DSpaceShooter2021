@@ -32,6 +32,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.3370454, y: -0.029509619, z: 0.078160964}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 604205332769637861}
   m_Father: {fileID: 0}
@@ -58,7 +59,6 @@ MonoBehaviour:
   _laserRightSide: {fileID: 1651176975475462059, guid: 8d9b3ae14d0fbeb4f9d874d39ec0f2c6, type: 3}
   _laserLeftSide: {fileID: 0}
   _laserFX: {fileID: 8300000, guid: 3febed1080fb1c04e84e2804d3c3406d, type: 3}
-  _isShielded: 0
 --- !u!212 &6018283354801050730
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -260,9 +260,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.046692133, y: 0.06225598}
   serializedVersion: 2
-  m_Radius: 0.36
+  m_Radius: 1.1952686
 --- !u!1 &9085897132594660158
 GameObject:
   m_ObjectHideFlags: 0
@@ -278,7 +278,7 @@ GameObject:
   - component: {fileID: 4587992287876039253}
   m_Layer: 0
   m_Name: EnemyShield
-  m_TagString: Enemy
+  m_TagString: Asteroid
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -293,6 +293,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.09, y: -0.03, z: 0}
   m_LocalScale: {x: 0.82409734, y: 0.7943582, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8159641934052144737}
   m_RootOrder: 0
