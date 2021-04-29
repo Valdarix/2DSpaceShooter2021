@@ -11,6 +11,7 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private GameObject[] _enemyListT1;
     [SerializeField] private GameObject[] _enemyListT2;
     [SerializeField] private GameObject[] _enemyListT3;
+    [SerializeField] private GameObject boss;
     private bool _canSpawn = false;   
     [SerializeField] private GameObject _enemyContainer;
     [SerializeField] private GameObject _powerUpContainer;

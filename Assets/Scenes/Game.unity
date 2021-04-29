@@ -391,7 +391,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 420996163}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 5.07, y: -1.59, z: 0}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1765,6 +1765,7 @@ MonoBehaviour:
   _enemyListT3:
   - {fileID: 5516283144032056305, guid: 8f811120ed6e72141b293a84b84a42cf, type: 3}
   - {fileID: 8649840395192925987, guid: 4bfcf6ce709c52146b1f11708a299e0f, type: 3}
+  boss: {fileID: 4808561069074353173, guid: 3a8c885bd11ed804096954839eb47e1e, type: 3}
   _enemyContainer: {fileID: 2087119582}
   _powerUpContainer: {fileID: 351629423}
   _spawnTimer: 5
@@ -2588,6 +2589,63 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1001 &4808561069184350444
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4808561069074353173, guid: 3a8c885bd11ed804096954839eb47e1e, type: 3}
+      propertyPath: m_Name
+      value: BigBadBoss
+      objectReference: {fileID: 0}
+    - target: {fileID: 4808561069074353175, guid: 3a8c885bd11ed804096954839eb47e1e, type: 3}
+      propertyPath: m_RootOrder
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4808561069074353175, guid: 3a8c885bd11ed804096954839eb47e1e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.8319384
+      objectReference: {fileID: 0}
+    - target: {fileID: 4808561069074353175, guid: 3a8c885bd11ed804096954839eb47e1e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 5.32
+      objectReference: {fileID: 0}
+    - target: {fileID: 4808561069074353175, guid: 3a8c885bd11ed804096954839eb47e1e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.82043284
+      objectReference: {fileID: 0}
+    - target: {fileID: 4808561069074353175, guid: 3a8c885bd11ed804096954839eb47e1e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4808561069074353175, guid: 3a8c885bd11ed804096954839eb47e1e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4808561069074353175, guid: 3a8c885bd11ed804096954839eb47e1e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4808561069074353175, guid: 3a8c885bd11ed804096954839eb47e1e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4808561069074353175, guid: 3a8c885bd11ed804096954839eb47e1e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4808561069074353175, guid: 3a8c885bd11ed804096954839eb47e1e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4808561069074353175, guid: 3a8c885bd11ed804096954839eb47e1e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3a8c885bd11ed804096954839eb47e1e, type: 3}
 --- !u!1001 &8117604038107849649
 PrefabInstance:
   m_ObjectHideFlags: 0
