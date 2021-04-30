@@ -229,7 +229,7 @@ public class Player : MonoBehaviour
         gameObject.transform.Find("Thruster").transform.gameObject.SetActive(false);
         gameObject.transform.Find("PlayerShield").transform.gameObject.SetActive(false);
         _speed = 0;
-        GameObject exp = Instantiate(_explosion, transform.position, Quaternion.identity);
+        var exp = Instantiate(_explosion, transform.position, Quaternion.identity);
         exp.gameObject.GetComponent<Animator>().SetTrigger(CanExplode);
         Destroy(gameObject);
     }

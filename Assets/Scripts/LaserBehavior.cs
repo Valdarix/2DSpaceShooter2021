@@ -79,7 +79,8 @@ public class LaserBehavior : MonoBehaviour
         }
         
         if (!this.CompareTag("EnemyLaser")) return;
-        transform.Translate(Vector3.down * (speed * Time.deltaTime));
+        transform.Translate(Vector2.up * (speed * Time.deltaTime));
+
 
         if (!(transform.position.y < -8.0f)) return;
         Destroy(this.gameObject);
