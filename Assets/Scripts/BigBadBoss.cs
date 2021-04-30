@@ -1,38 +1,36 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class BigBadBoss : MonoBehaviour
 {
     [SerializeField] private float speed = 2f;
-    
     [SerializeField] private GameObject bossMainBody;
     [SerializeField] private GameObject bossLeftGun;
     [SerializeField] private GameObject bossRightGun;
     [SerializeField] private GameObject bossLeftGunBase;
     [SerializeField] private GameObject bossRightGunBase;
     [SerializeField] private GameObject mainGunProjectile;
+    [SerializeField] private GameObject turretProjectile;
     [SerializeField] private GameObject bossShield;
     [SerializeField] private LayerMask ignoreHitDetection;
     private int _shieldPower = 3;
     private bool _isShielded = true;
-    private Transform _leftTurret;
     private Transform _leftTurretBase;
+    private Transform _leftTurret;
     private bool _leftTurretDestroyed = false;
     private Transform _rightTurret;
     private Transform _rightTurretBase;
     private bool _rightTurretDestroyed = false;
     private Transform _bossTransform;
-    private float _angle;
-    private const float RotateSpeed = 0.5f;
-    private const float Radius = 0f;
     private bool _canFireLeftTurret = true;
     private bool _canFireRightTurret = true;
-    private Turret _leftTurretGun;
-    private Turret _rightTurretGun;
     private SpriteRenderer _bossShieldSprite;
-    
+    private bool _detectedLeft = false;
+    private bool _detectedRight = false;
+    private Transform _playerTarget;
 
     // Start is called before the first frame update
     private void Start()
@@ -41,94 +39,89 @@ public class BigBadBoss : MonoBehaviour
         _rightTurret = bossRightGun.GetComponent<Transform>();
         _leftTurretBase = bossLeftGunBase.GetComponent<Transform>();
         _rightTurretBase = bossRightGunBase.GetComponent<Transform>();
-        _leftTurretGun = _leftTurret.GetComponent<Turret>();
-        _rightTurretGun = _rightTurret.GetComponent<Turret>();
         _bossTransform = GetComponent<Transform>();
-        _bossShieldSprite = bossShield.GetComponent<SpriteRenderer>(); 
+        _bossShieldSprite = bossShield.GetComponent<SpriteRenderer>();
 
-        StartCoroutine(RotateLeftGun());
-        StartCoroutine(RotateRightGun());
+        _playerTarget = GameObject.Find("Player").GetComponent<Transform>();
+
+     
     }
 
     // Update is called once per frame
     private void Update()
     {
-        
     }
 
-    private IEnumerator RotateLeftGun()
+    private void FixedUpdate()
     {
-        var dirToRotate = new Vector3(0,0,1);
-        
-        while (true)
+        RotateLeftGun();
+        RotateRightGun();
+    }
+
+    private void RotateLeftGun()
+    {
+        if (_leftTurretDestroyed)
         {
-            
-            if (_leftTurretDestroyed)
-            {
-                yield break;
-            }
-            dirToRotate = _rightTurret.rotation.z switch
-            {
-                < 88.69f => dirToRotate,
-                > 191.32f => -dirToRotate,
-                _ => dirToRotate
-            };
-            _angle += RotateSpeed * Time.deltaTime;
-            var offset = new Vector3(Mathf.Sin(_angle), Mathf.Cos(_angle),0) * Radius; 
-            _leftTurret.position = _leftTurretBase.position + offset;
-            _leftTurret.Rotate(dirToRotate * (100 * Time.deltaTime));
-            
-            var horizontalOffset = new Vector3(0, 0.8f, 0);
-            const float rayLength = 400f;
-            var hitLeft = Physics2D.Raycast((_leftTurret.position), _leftTurret.up , rayLength,~ignoreHitDetection);
-            
-            Debug.DrawRay(_leftTurret.position, _leftTurret.up * rayLength, new Color(0f, 1f, 0.04f));
-            if (_canFireLeftTurret && hitLeft.collider != null && hitLeft.collider.CompareTag("Player"))
+            return;
+        }
+        var targetPos = _playerTarget.position;
+        var dir = CalculateDirection(targetPos, (Vector2) _leftTurret.position);
+        var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        var rayInfo = Physics2D.Raycast(_leftTurret.position, dir, 50);
+        Debug.DrawRay(_leftTurret.position,dir,Color.red);
+        _leftTurret.transform.up = dir;
+        if (rayInfo.collider != null && rayInfo.collider.CompareTag("Player"))
+        {
+            _detectedLeft = _detectedLeft switch
             {
                 //Fire at player!
-                _leftTurretGun.FireLaser();
+                false => true,
+                true => false
+            };
+            if (_detectedLeft && _canFireLeftTurret)
+            {
+                var force = 7f;
+                var bossLaser = Instantiate(turretProjectile, _leftTurret.position,_leftTurret.rotation);
+                bossLaser.GetComponent<Rigidbody2D>().AddForce(dir * force);
                 _canFireLeftTurret = false;
                 StartCoroutine(TurretCooldown("LeftTurret"));
             }
-
-            yield return null;
         }
     }
-    
-    private IEnumerator RotateRightGun()
+    private static Vector2 CalculateDirection(Vector2 targetPos, Vector2 turretPos)
     {
-        var dirToRotate = Vector2.right;
-        while (true)
-        {
-            if (_rightTurretDestroyed)
-            {
-                yield break;
-            }
-            _angle += RotateSpeed * Time.deltaTime;
-            var offset = new Vector3(Mathf.Sin(_angle), Mathf.Cos(_angle),0) * Radius; 
-            _rightTurret.position = _rightTurretBase.position + offset;
-            _rightTurret.Rotate(-Vector3.forward * (100 * Time.deltaTime));
-            
-            var horizontalOffset = new Vector3(0, 0.8f, 0);
-            const float rayLength = 400f;
-            dirToRotate = _rightTurret.rotation.z switch
-            {
-                < 14.44f => Vector2.right,
-                > 81.663f => Vector2.left,
-                _ => dirToRotate
-            };
+        return targetPos - turretPos;
+    }
 
-            var hitRight = Physics2D.Raycast(_rightTurret.position, _rightTurret.up , rayLength,~ignoreHitDetection);
-            
-            Debug.DrawRay(_rightTurret.position, _rightTurret.up * rayLength, Color.red);
-            if (_canFireRightTurret && hitRight.collider != null && hitRight.collider.CompareTag("Player"))
+    private void RotateRightGun()
+    {
+        if (_rightTurretDestroyed)
+        {
+            return;
+        }
+
+        var targetPos = _playerTarget.position;
+        var dir = CalculateDirection(targetPos, (Vector2) _rightTurret.position);
+        var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        var rayInfo = Physics2D.Raycast(_rightTurret.position, dir, 50);
+        Debug.DrawRay(_rightTurret.position,dir,Color.red);
+        _rightTurret.transform.up = dir;
+        if (rayInfo.collider != null && rayInfo.collider.CompareTag("Player"))
+        {
+            _detectedRight = _detectedRight switch
             {
                 //Fire at player!
+                false => true,
+                true => false
+            };
+            if (_detectedRight && _canFireRightTurret)
+            {
+                var force = 7f;
+                var bossLaser = Instantiate(turretProjectile, _rightTurret.position,_rightTurret.rotation);
+                bossLaser.GetComponent<Rigidbody2D>().AddForce(dir * force);
                 _canFireRightTurret = false;
-                _rightTurretGun.FireLaser();
                 StartCoroutine(TurretCooldown("RightTurret"));
             }
-            yield return null;
         }
     }
 
@@ -167,8 +160,6 @@ public class BigBadBoss : MonoBehaviour
             {
                 // Damage the player
             }
-
         }
-
     }
 }

@@ -196,7 +196,8 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(_laserCooldownTimer);
         _laserCanFire = true;
     }
-    IEnumerator MissileCooldownTimer()
+
+    private IEnumerator MissileCooldownTimer()
     {
         yield return new WaitForSeconds(_laserCooldownTimer);
         _missileCanFire = true;

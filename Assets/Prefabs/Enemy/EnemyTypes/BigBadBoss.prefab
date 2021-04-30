@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1791824019980010984}
   - component: {fileID: 1778522615234886948}
   - component: {fileID: 3786073023727174311}
-  - component: {fileID: 822987162}
   m_Layer: 2
   m_Name: TurretLeftGun
   m_TagString: Enemy
@@ -95,7 +94,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 620674964754676828}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -124,22 +123,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: -0.00000047683716}
   serializedVersion: 2
   m_Radius: 0.9
---- !u!114 &822987162
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 620674964754676828}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f89b696c3f970774a8552e46609ddaab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  turretProjectile1: {fileID: 2090203981717020990, guid: 9df6bdbb284e63b4185c770d624520b5, type: 3}
-  isLeft: 1
-  test: {x: -0.3, y: 0.1, z: 0}
-  bigBossTransform: {fileID: 4808561069074353175}
 --- !u!1 &2983488959595057381
 GameObject:
   m_ObjectHideFlags: 0
@@ -334,7 +317,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4808561068221393610}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
   m_LocalPosition: {x: 1.094, y: -0.131, z: 0}
   m_LocalScale: {x: 0.6847738, y: 0.9118, z: 1}
   m_ConstrainProportionsScale: 0
@@ -342,7 +325,7 @@ Transform:
   - {fileID: 4808561068781965563}
   m_Father: {fileID: 4808561068405537662}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
 --- !u!212 &4808561068221393604
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -419,7 +402,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4808561068342324232}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
   m_LocalPosition: {x: -1.0938, y: -0.131, z: 0}
   m_LocalScale: {x: 0.6847738, y: 0.9118, z: 1}
   m_ConstrainProportionsScale: 0
@@ -427,7 +410,7 @@ Transform:
   - {fileID: 3290691665182084184}
   m_Father: {fileID: 4808561068405537662}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
 --- !u!212 &4808561068342324234
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -525,7 +508,6 @@ GameObject:
   - component: {fileID: 4808561068781965562}
   - component: {fileID: 7507965631746940322}
   - component: {fileID: 7649930150280458758}
-  - component: {fileID: 730216822}
   m_Layer: 2
   m_Name: TurretRightGun
   m_TagString: Enemy
@@ -608,7 +590,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4808561068781965561}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -637,22 +619,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: -0.00000047683716}
   serializedVersion: 2
   m_Radius: 0.9
---- !u!114 &730216822
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4808561068781965561}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f89b696c3f970774a8552e46609ddaab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  turretProjectile1: {fileID: 2090203981717020990, guid: 9df6bdbb284e63b4185c770d624520b5, type: 3}
-  isLeft: 0
-  test: {x: 0, y: 0, z: 0}
-  bigBossTransform: {fileID: 4808561069074353175}
 --- !u!1 &4808561069074353173
 GameObject:
   m_ObjectHideFlags: 0
@@ -710,10 +676,12 @@ MonoBehaviour:
   bossLeftGunBase: {fileID: 4808561068342324232}
   bossRightGunBase: {fileID: 4808561068221393610}
   mainGunProjectile: {fileID: 7002883784942413443, guid: 7b75d7554e141984080e664134a131b2, type: 3}
+  turretProjectile: {fileID: 2090203981717020990, guid: 9df6bdbb284e63b4185c770d624520b5, type: 3}
   bossShield: {fileID: 2983488959595057381}
   ignoreHitDetection:
     serializedVersion: 2
     m_Bits: 4
+  Range: 20
 --- !u!50 &7496219436770987238
 Rigidbody2D:
   serializedVersion: 4
@@ -748,8 +716,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.024054527, y: -2.370636}
-  m_Size: {x: 1.943403, y: 2.9740162}
+  m_Offset: {x: -1.7647958, y: 0.5999999}
+  m_Size: {x: 1.7138114, y: 2.9740162}
   m_Direction: 0
 --- !u!70 &5742831632034823645
 CapsuleCollider2D:
@@ -764,7 +732,7 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 3.480246, y: -2.32094}
+  m_Offset: {x: 1.75, y: 0.47}
   m_Size: {x: 1.9237909, y: 3.238059}
   m_Direction: 0
 --- !u!70 &3439484303906556909
@@ -780,8 +748,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 1.7810628, y: -2.9016001}
-  m_Size: {x: 1.5958629, y: 4.58857}
+  m_Offset: {x: -0.048692048, y: -0.059999943}
+  m_Size: {x: 1.6584787, y: 4.58857}
   m_Direction: 0
 --- !u!1 &4808561069696840691
 GameObject:
