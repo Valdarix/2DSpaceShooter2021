@@ -35,7 +35,7 @@ public class LaserBehavior : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {   
-        if (this.CompareTag("Laser"))
+        if (CompareTag("Laser"))
         {
             if (other.CompareTag("Enemy") || other.CompareTag("Asteroid"))
             {
@@ -46,7 +46,7 @@ public class LaserBehavior : MonoBehaviour
             }
         }
 
-        if (!this.CompareTag("EnemyLaser")) return;
+        if (!CompareTag("EnemyLaser") && !CompareTag("BossLaser")) return;
         if (other.CompareTag("Player"))
         {
             if (destroyOnTrigger != true) return;
@@ -54,22 +54,21 @@ public class LaserBehavior : MonoBehaviour
             if (player == null) return;
             //Apply Damage to player
             player.DamagePlayer(1);
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
         else if (other.CompareTag("Powerup"))
         {
             var powerupToDestroy = other.transform.GetComponent<Powerup>();
             powerupToDestroy.DestroyPowerup();
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
 
     }
 
     private void HandleMovement()
     {
-        
         if (this.CompareTag("Laser"))
-        { 
+        {
             transform.Translate(Vector3.up * (speed * Time.deltaTime));
 
             if (transform.position.y > 8.0f)
@@ -77,12 +76,19 @@ public class LaserBehavior : MonoBehaviour
                 Destroy(this.gameObject);
             }
         }
-        
-        if (!this.CompareTag("EnemyLaser")) return;
-        transform.Translate(Vector3.down * (speed * Time.deltaTime));
+        else if (!this.CompareTag("EnemyLaser"))
+        {
+            transform.Translate(Vector2.up * (speed * Time.deltaTime));
+            if (!(transform.position.y < -8.0f)) return;
+            Destroy(this.gameObject);
+        } 
+        else if (!this.CompareTag("BossLaser"))
+        {
+            transform.Translate(Vector2.down * (speed * Time.deltaTime));
+            if (!(transform.position.y < -8.0f)) return;
+            Destroy(this.gameObject);
+        }
 
-        if (!(transform.position.y < -8.0f)) return;
-        Destroy(this.gameObject);
     }
 
     private void HandleRotate()

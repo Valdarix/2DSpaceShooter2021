@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro.EditorUtilities;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
@@ -27,25 +29,25 @@ public class SpawnManager : MonoBehaviour
     {
         _spawnEnemyWaitForSeconds = new WaitForSeconds(_spawnTimer);
         var newAsteroid = Instantiate(_asteroid, _enemyContainer.transform, true);
+        newAsteroid.gameObject.GetComponent<AsteroidBehavior>().UpdateSpeed(0);
         _gameManager.NewWave();
     }
 
     private IEnumerator SpawnEnemy()
     {
         yield return new WaitForSeconds(3.0f);
-        while (_canSpawn)
+        while (_canSpawn || !_gameManager.GetGameOver())
         {
             //Get Enemy to Spawn. 3 Tier System
             PickEnemy();
-            
-            _maxEnemiesToSpawn--;            
+            _maxEnemiesToSpawn--;
             if (_maxEnemiesToSpawn == 0) //handle spawning new wave
-            {               
+            {
                 _currentWave++;
                 _gameManager.NewWave();
-                _spawnTimer -= 1f;
+                _spawnTimer -= 0.5f;
                 _spawnEnemyWaitForSeconds = new WaitForSeconds(_spawnTimer);
-               
+
                 switch (_currentWave)
                 {
                     case 2:
@@ -57,14 +59,19 @@ public class SpawnManager : MonoBehaviour
                     case 4:
                         _maxEnemiesToSpawn = BaseEnemiesPerLevel + 6;
                         break;
-                    default:
-                        _canSpawn = false; // Stop spawning and prepare for the boss.
+                    case 5:
+                        _maxEnemiesToSpawn = 0;
+                        var bossSpawn = Instantiate(this.boss, new Vector3(0,10,0), Quaternion.identity);
+                        bossSpawn.transform.parent = _enemyContainer.transform;
                         break;
-                }    
+                    default:
+                        _canSpawn = false;
+                        // Spawn the boss waves are completed
+                        break;
+                }
             }
             yield return _spawnEnemyWaitForSeconds;
         }
-        // Spawn the boss waves are completed
     }
 
     private void PickEnemy()

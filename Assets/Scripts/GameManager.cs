@@ -22,10 +22,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void GameOver()
+    public void GameOver(string text)
     {
         isGameOver = true;
-    }   
+        _ui.GameOver(text);
+    }
+
+    public bool GetGameOver()
+    {
+        return isGameOver;
+    }
     public void NewWave()
     {
         _wave++;

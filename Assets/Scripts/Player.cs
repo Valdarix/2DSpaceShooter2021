@@ -124,7 +124,6 @@ public class Player : MonoBehaviour
                         _ui.UpdateThrusterUI(_thrusterPower);
                         break;
                 }
-              
                 _lastThrusterUpdate = Time.time;
             }
         }
@@ -179,7 +178,7 @@ public class Player : MonoBehaviour
         _ui.UpdateMissileUI(_homingMissleCount);
         if (_homingMissleCount == 0)
         {
-            _powerupID = -1; 
+            _ui.UpdateHintText(false);
         }
         _missileCanFire = false;
         StartCoroutine(MissileCooldownTimer());
@@ -189,6 +188,7 @@ public class Player : MonoBehaviour
     {
         var offset = new Vector3(0.0f, 1.05f, 0.0f);
         Instantiate(weaponProjectile, (transform.position + offset), Quaternion.identity);
+        _audioFXSource.Play();
     }
 
     private IEnumerator LaserCooldownTimer()
@@ -196,7 +196,8 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(_laserCooldownTimer);
         _laserCanFire = true;
     }
-    IEnumerator MissileCooldownTimer()
+
+    private IEnumerator MissileCooldownTimer()
     {
         yield return new WaitForSeconds(_laserCooldownTimer);
         _missileCanFire = true;
@@ -229,7 +230,7 @@ public class Player : MonoBehaviour
         gameObject.transform.Find("Thruster").transform.gameObject.SetActive(false);
         gameObject.transform.Find("PlayerShield").transform.gameObject.SetActive(false);
         _speed = 0;
-        GameObject exp = Instantiate(_explosion, transform.position, Quaternion.identity);
+        var exp = Instantiate(_explosion, transform.position, Quaternion.identity);
         exp.gameObject.GetComponent<Animator>().SetTrigger(CanExplode);
         Destroy(gameObject);
     }
@@ -277,6 +278,7 @@ public class Player : MonoBehaviour
                 // TODO: Set Sound;
                 _homingMissleCount = 2;
                 _ui.UpdateMissileUI(_homingMissleCount);
+                _ui.UpdateHintText(true);
                 break;
         }
         StartCoroutine(PowerUpTimer());

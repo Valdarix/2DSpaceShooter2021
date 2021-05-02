@@ -62,7 +62,7 @@ public class EnemyBehavior : MonoBehaviour
         }
         // Predetermine the dodge for dodge enemies
         _randomLeftRight = Random.Range(1, 100);
-
+       
     }
 
     // Update is called once per frame
@@ -80,19 +80,12 @@ public class EnemyBehavior : MonoBehaviour
             var hit = Physics2D.Raycast(transform.position, Vector2.down, rayLength);
             if (hit.collider != null)
             {
-                if (hit.collider.CompareTag("Player"))
+                if (hit.collider.CompareTag("Player") || hit.collider.CompareTag("Powerup"))
                 {
                     //Fire at player!
                     var offset = new Vector3(0, 0, 0);
                     Instantiate(_laser, (transform.position + offset), Quaternion.identity);
-                    _canFire = false;
-                    StartCoroutine(LaserCooldownTimer("MainLaser"));
-                }
-                if (hit.collider.CompareTag("Powerup"))
-                {
-                    //Fire at player!
-                    var offset = new Vector3(0, 0, 0);
-                    Instantiate(_laser, (transform.position + offset), Quaternion.identity);
+                    _audioFXSource.Play();
                     _canFire = false;
                     StartCoroutine(LaserCooldownTimer("MainLaser"));
                 }
@@ -106,8 +99,9 @@ public class EnemyBehavior : MonoBehaviour
                 if (hitRight.collider.CompareTag("Player"))
                 {
                     //Fire at player!
-                    Vector3 offset = new Vector3(0.769999981f, 0.75999999f, 0);
+                    var offset = new Vector3(0.769999981f, 0.75999999f, 0);
                     Instantiate(_laserRightSide, (transform.position + offset), _laserRightSide.transform.rotation);
+                    _audioFXSource.Play();
                     _canFireRight = false;
                     StartCoroutine(LaserCooldownTimer("RightCannon"));
                 }
@@ -121,8 +115,9 @@ public class EnemyBehavior : MonoBehaviour
                 if (hitLeft.collider.CompareTag("Player"))
                 {
                     //Fire at player!
-                    Vector3 offset = new Vector3(-0.769999981f, 0.75999999f, 0);
+                    var offset = new Vector3(-0.769999981f, 0.75999999f, 0);
                     Instantiate(_laserLeftSide, (transform.position + offset), _laserLeftSide.transform.rotation);
+                    _audioFXSource.Play();
                     _canFireLeft = false;
                     StartCoroutine(LaserCooldownTimer("LeftCannon"));
                 }
@@ -131,8 +126,8 @@ public class EnemyBehavior : MonoBehaviour
 
         if (_canFire != true || _enemyID != 4) return;
         {
-            const float rayLengthforRam = 5f;
-            var hit = Physics2D.Raycast(transform.position, Vector2.down, rayLengthforRam);
+            const float rayLengthRam = 5f;
+            var hit = Physics2D.Raycast(transform.position, Vector2.down, rayLengthRam);
             if (hit.collider == null) return;
             if (!hit.collider.CompareTag("Player")) return;
             //Ram the player!
@@ -205,7 +200,6 @@ public class EnemyBehavior : MonoBehaviour
                             _canFire = false;
                             StartCoroutine(LaserCooldownTimer("MainLaser"));
                         }
-
                     }
                     break;
                 default:
@@ -216,9 +210,7 @@ public class EnemyBehavior : MonoBehaviour
         else
         {
             transform.position = new Vector3(Random.Range(-10.0f, 10.0f), 7.5f, 0);
-        }    
-        
-       
+        }
     }
 
     private IEnumerator DisableDodge()

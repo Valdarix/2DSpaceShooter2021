@@ -9,6 +9,9 @@ TagManager:
   - Powerup
   - EnemyLaser
   - Asteroid
+  - LeftTag
+  - RightTag
+  - BossLaser
   layers:
   - Default
   - TransparentFX
