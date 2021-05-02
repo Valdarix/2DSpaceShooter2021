@@ -124,7 +124,6 @@ public class Player : MonoBehaviour
                         _ui.UpdateThrusterUI(_thrusterPower);
                         break;
                 }
-              
                 _lastThrusterUpdate = Time.time;
             }
         }
@@ -179,7 +178,7 @@ public class Player : MonoBehaviour
         _ui.UpdateMissileUI(_homingMissleCount);
         if (_homingMissleCount == 0)
         {
-            _powerupID = -1; 
+            _ui.UpdateHintText(false);
         }
         _missileCanFire = false;
         StartCoroutine(MissileCooldownTimer());
@@ -189,6 +188,7 @@ public class Player : MonoBehaviour
     {
         var offset = new Vector3(0.0f, 1.05f, 0.0f);
         Instantiate(weaponProjectile, (transform.position + offset), Quaternion.identity);
+        _audioFXSource.Play();
     }
 
     private IEnumerator LaserCooldownTimer()
@@ -278,6 +278,7 @@ public class Player : MonoBehaviour
                 // TODO: Set Sound;
                 _homingMissleCount = 2;
                 _ui.UpdateMissileUI(_homingMissleCount);
+                _ui.UpdateHintText(true);
                 break;
         }
         StartCoroutine(PowerUpTimer());

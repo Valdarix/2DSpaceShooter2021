@@ -20,6 +20,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Text _waveText;
     [SerializeField] private Image missleUI1;
     [SerializeField] private Image missleUI2;
+    [SerializeField] private Text hintText;
 
     private void Start()
     {
@@ -40,11 +41,17 @@ public class UIManager : MonoBehaviour
         if (currentLives != 0) return;
         if (_gameManager != null)
         { 
-            _gameManager.GameOver(); 
+            _gameManager.GameOver("Game Over!"); 
         }            
         _restartGameText.gameObject.SetActive(true);
         _gameOverText.gameObject.SetActive(true);
         StartCoroutine(FlickerText(_gameOverText, "Game Over"));
+    }
+
+    public void GameOver(string gameOverText)
+    {
+        _gameOverText.text = gameOverText;
+        _gameOverText.gameObject.SetActive(true);
     }
 
     public void UpdateShield(int currentShield)
@@ -66,6 +73,10 @@ public class UIManager : MonoBehaviour
     {
         while (true)
         {
+            if (uiTextObject.text == "YOU WIN!")
+            {
+                uiTextObject.color = Color.green; 
+            }
             uiTextObject.text = uiText;
             yield return new WaitForSeconds(0.5f);
             uiTextObject.text = "";
@@ -75,6 +86,11 @@ public class UIManager : MonoBehaviour
     public void UpdateWaveUI(int currentWave)
     {
         _waveText.text = "Wave: " + currentWave;
+    }
+
+    public void UpdateHintText(bool status)
+    {
+        hintText.gameObject.SetActive(status);
     }
 
     public void UpdateMissileUI(int missileCount)
