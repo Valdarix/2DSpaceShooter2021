@@ -26,11 +26,13 @@ public class EnemyBehavior : MonoBehaviour
     private bool _canDodge = false;
     private int _randomLeftRight;
     private static readonly int CanExplode = Animator.StringToHash("CanExplode");
+    private SpawnManager _spawnManager;
 
 
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
+        _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
         if (_player == null)
         {
             Debug.LogError("Player is NULL");
@@ -237,6 +239,7 @@ public class EnemyBehavior : MonoBehaviour
             exp.gameObject.GetComponent<Animator>().SetTrigger(CanExplode);
             _speed = 0;
             Destroy(this.gameObject);
+            _spawnManager.EnemyKilled();
         }
         else if (other.CompareTag("Laser"))
         {           
@@ -245,6 +248,7 @@ public class EnemyBehavior : MonoBehaviour
             _speed = 0;
             Destroy(this.gameObject);
             _player.UpdateScore(10);
+            _spawnManager.EnemyKilled();
         }
     }
 

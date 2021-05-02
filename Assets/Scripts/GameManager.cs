@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
     {
         _wave++;
         _ui.UpdateWaveUI(_wave);
+     
     }
     public int GetWave()
     {

@@ -21,12 +21,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image missleUI1;
     [SerializeField] private Image missleUI2;
     [SerializeField] private Text hintText;
-
+ 
     private void Start()
     {
         _scoreText.text = "Score: " + 0;
         _gameOverText.gameObject.SetActive(false);
-        _restartGameText.gameObject.SetActive(false);        
+        _restartGameText.gameObject.SetActive(false);
+      
     }
 
     public void UpdateScoreUI(int currentScore)
@@ -68,6 +69,7 @@ public class UIManager : MonoBehaviour
         };
         _ammoCountText.text = "Ammo: " + ammoCount + "/" + maxAmmo;
     }
+    
 
     private static IEnumerator FlickerText(Text uiTextObject, string uiText)
     {

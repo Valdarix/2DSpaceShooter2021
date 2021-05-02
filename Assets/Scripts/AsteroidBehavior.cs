@@ -18,7 +18,7 @@ public class AsteroidBehavior : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        var randomLocation = new Vector3(Random.Range(-8f, 8f), Random.Range(4f, 6f), 0);
+        var randomLocation = new Vector3(Random.Range(-5f, 5f), Random.Range(4f, 6f), 0);
         gameObject.transform.position = randomLocation;
 
         _animator = gameObject.GetComponent<Animator>();

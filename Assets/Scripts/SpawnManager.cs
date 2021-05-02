@@ -1,7 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using TMPro.EditorUtilities;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
@@ -18,11 +15,13 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private GameObject _enemyContainer;
     [SerializeField] private GameObject _powerUpContainer;
     [SerializeField] private float _spawnTimer = 5.0f;
-    [SerializeField] private WaitForSeconds _spawnEnemyWaitForSeconds;   
+    private WaitForSeconds _spawnEnemyWaitForSeconds;   
     private int _maxEnemiesToSpawn = 10;
     private const int BaseEnemiesPerLevel = 10;
     [SerializeField] private GameManager _gameManager;
     private int _currentWave = 1;
+    private int _currentEnemiesSpawned = 0;
+    
 
     // Start is called before the first frame update
     private void Start()
@@ -36,12 +35,19 @@ public class SpawnManager : MonoBehaviour
     private IEnumerator SpawnEnemy()
     {
         yield return new WaitForSeconds(3.0f);
+        Debug.Log(_canSpawn + "   " + _gameManager.GetGameOver());
         while (_canSpawn || !_gameManager.GetGameOver())
         {
+            Debug.Log(_maxEnemiesToSpawn + "   " + _currentEnemiesSpawned);
             //Get Enemy to Spawn. 3 Tier System
-            PickEnemy();
-            _maxEnemiesToSpawn--;
-            if (_maxEnemiesToSpawn == 0) //handle spawning new wave
+            
+            if (_maxEnemiesToSpawn != 0)
+            {
+                PickEnemy();
+                _currentEnemiesSpawned++;
+                _maxEnemiesToSpawn--;
+            }
+            if (_maxEnemiesToSpawn == 0 && _currentEnemiesSpawned == 0) //handle spawning new wave
             {
                 _currentWave++;
                 _gameManager.NewWave();
@@ -96,12 +102,17 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
+    public void EnemyKilled()
+    {
+        _currentEnemiesSpawned--;
+    }
+
     private IEnumerator SpawnPowerup()
     {
         yield return new WaitForSeconds(3.0f);
         while (_canSpawn)
         {
-            yield return new WaitForSeconds(Random.Range(4.0f, 8.0f));
+            yield return new WaitForSeconds(Random.Range(8f,10.0f));
             // roll random 100. Tier 1 = 0 - 60, Tier 2 = 61 - 85, Tier 3 = 75 - 99 
             var randomRoll = Random.Range(1f, 100f);
             var randomLocation = new Vector3(Random.Range(-8f, 8f), 7, 0);
@@ -112,11 +123,11 @@ public class SpawnManager : MonoBehaviour
                     newPowerup = Instantiate(_powerUpObjectT1[Random.Range(0, _powerUpObjectT1.Length)], randomLocation, Quaternion.identity);
                     newPowerup.transform.parent = _powerUpContainer.transform;
                     break;
-                case >= 61 and <= 85:
+                case >= 61 and <= 89:
                     newPowerup = Instantiate(_powerUpObjectT2[Random.Range(0, _powerUpObjectT2.Length)], randomLocation, Quaternion.identity);
                     newPowerup.transform.parent = _powerUpContainer.transform;
                     break;
-                case >= 86 and <= 100:
+                case >= 90 and <= 100:
                     newPowerup = Instantiate(_powerUpObjectT3[Random.Range(0, _powerUpObjectT3.Length)], randomLocation, Quaternion.identity);
                     newPowerup.transform.parent = _powerUpContainer.transform;
                     break;
